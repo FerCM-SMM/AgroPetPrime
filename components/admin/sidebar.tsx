@@ -8,18 +8,19 @@ import {
   ShoppingCart,
   Users,
   Package,
+  Boxes,
   BarChart3,
   Store,
-  LogOut,
   ShieldCheck,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '/admin', label: 'Dashboard & Vendas', icon: LayoutDashboard },
-  { href: '/admin/produtos', label: 'Gerenciar Produtos', icon: Package },
+  { href: '/admin/produtos', label: 'Catálogo de Produtos', icon: Package },
+  { href: '/admin/estoque', label: 'Controle de Estoque', icon: Boxes },
   { href: '/admin/pedidos', label: 'Pedidos do Site', icon: ShoppingCart },
-  { href: '/admin/clientes', label: 'Base de Clientes', icon: Users },
+  { href: '/admin/clientes', label: 'Base de Clientes & CRM', icon: Users },
   { href: '/admin/analytics', label: 'Relatórios & Métricas', icon: BarChart3 },
 ];
 
