@@ -1,0 +1,41 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "name": "AgroPet Pr1me Architecture Contract",
+  "layers": [
+    {
+      "name": "domain-types",
+      "path": "types/**",
+      "canImport": []
+    },
+    {
+      "name": "data-access",
+      "path": "lib/supabase/**",
+      "canImport": ["types/**"]
+    },
+    {
+      "name": "observability",
+      "path": "lib/observability/**",
+      "canImport": ["types/**"]
+    },
+    {
+      "name": "hooks-and-state",
+      "path": "hooks/**",
+      "canImport": ["lib/**", "types/**"]
+    },
+    {
+      "name": "ui-components",
+      "path": "components/**",
+      "canImport": ["hooks/**", "lib/**", "types/**"]
+    },
+    {
+      "name": "application-pages",
+      "path": "app/**",
+      "canImport": ["components/**", "hooks/**", "lib/**", "types/**"]
+    }
+  ],
+  "rules": {
+    "noDirectDatabaseInClientComponents": true,
+    "enforceServerActionsForMutations": true,
+    "disallowCircularDependencies": true
+  }
+}
