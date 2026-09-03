@@ -1,53 +1,58 @@
-﻿import { Heart, Award, Headphones, RefreshCw } from 'lucide-react';
-
 export function Stats() {
-  const benefits = [
+  const pillars = [
     {
-      icon: Heart,
-      title: 'Amado pelos Pets',
-      description: 'Produtos testados e aprovados por milhares de tutores',
-      color: 'bg-[#ef4444]/10 text-red-500',
+      title: 'Loja Física em Sorocaba',
+      desc: 'Estrutura ampla e acolhedora na R. Antônio Silva Saladino, 878 no Parque Vitória Régia. Venha tomar um café conosco!',
+      icon: 'store',
+      color: 'bg-[#00c0e3]/20 text-[#00687b]',
     },
     {
-      icon: Award,
-      title: 'Qualidade Pr1me',
-      description: 'Marcas líderes mundiais e fórmulas veterinárias',
-      color: 'bg-[#fbbf24]/15 text-[#b45309]',
+      title: 'Entrega Expressa Ágil',
+      desc: 'Acabou a ração de repente? Despachamos seu pedido com urgência para que seu pet nunca fique desabastecido.',
+      icon: 'bolt',
+      color: 'bg-[#10B981]/20 text-[#10B981]',
     },
     {
-      icon: Headphones,
-      title: 'Suporte no WhatsApp',
-      description: 'Atendimento atencioso e ágil de seg a sáb',
-      color: 'bg-[#12c0e0]/15 text-[#0284c7]',
+      title: 'Atendimento Humanizado',
+      desc: 'Orientação técnica e amiga por quem ama bichos e compreende a lida do homem do campo e dos tutores urbanos.',
+      icon: 'recommend',
+      color: 'bg-[#5ab7fd]/20 text-[#006398]',
     },
     {
-      icon: RefreshCw,
-      title: 'Troca Descomplicada',
-      description: 'Até 30 dias para devolução ou troca sem burocracia',
-      color: 'bg-[#10b981]/15 text-[#059669]',
+      title: 'Preço Justo & Fidelidade',
+      desc: 'Promoções reais semanais, combos de saca fechada e descontos especiais pelo PIX para toda a família rural e pet.',
+      icon: 'price_check',
+      color: 'bg-[#D97706]/20 text-[#D97706]',
     },
   ];
 
   return (
-    <section className="py-12 bg-white border-y border-[#ede8dc]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
-          {benefits.map((item, i) => (
+    <section className="w-full py-16 bg-[#f8f9ff]">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <span className="text-xs font-extrabold text-[#00687b] uppercase tracking-wider">
+            Por que comprar com a AgroPet Prime
+          </span>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0B0F17] mt-1">
+            A certeza de um cuidado genuíno com o seu animal
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {pillars.map((p, idx) => (
             <div
-              key={i}
-              className="flex items-center gap-4 text-left group hover-lift p-2 rounded-2xl transition-all"
+              key={idx}
+              className="bg-white p-6 sm:p-8 rounded-3xl shadow-xs hover:shadow-md transition-all flex flex-col items-start border border-gray-100 hover-lift"
             >
-              <div className={`w-14 h-14 rounded-full ${item.color} flex items-center justify-center shrink-0 transition-transform group-hover:scale-108 duration-300`}>
-                <item.icon className="w-6 h-6 stroke-[2.2]" />
+              <div className={`w-14 h-14 rounded-2xl ${p.color} flex items-center justify-center mb-5`}>
+                <span className="material-symbols-outlined text-[30px]">{p.icon}</span>
               </div>
-              <div>
-                <h4 className="text-base font-bold text-[#111827] group-hover:text-[#0284c7] transition-colors leading-snug">
-                  {item.title}
-                </h4>
-                <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-                  {item.description}
-                </p>
-              </div>
+              <h3 className="font-extrabold text-base sm:text-lg text-[#0B0F17] mb-2">
+                {p.title}
+              </h3>
+              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                {p.desc}
+              </p>
             </div>
           ))}
         </div>
