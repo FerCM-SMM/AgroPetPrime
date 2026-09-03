@@ -1,0 +1,31 @@
+# AgroPet Pr1me - Pet Shop & Linha Agro em Sorocaba/SP
+> O maior e mais completo ecossistema de nutrição animal, farmácia veterinária especializada e artigos para o campo em Sorocaba e região metropolitana.
+
+## Visão Geral
+A AgroPet Pr1me é um e-commerce e loja física de referência localizada em Sorocaba/SP. Especializada no cuidado integral de cães, gatos, pássaros, equinos e criações do campo, a loja alia produtos 100% originais com entrega rápida em até 24h a 48h, assessoria veterinária humanizada e desconto de 5% em pagamentos via Pix.
+
+- Localização Física: R. Antônio Silva Saladino, 878 - Parque Vitória Régia, Sorocaba - SP, CEP 18078-110
+- Canais de Contato: WhatsApp (15) 99658-0804 | E-mail: atendimento@agropetprime.com.br
+- Horário de Funcionamento: Segunda a Sábado das 08h às 19h | Domingo das 08h às 13h
+- Regiões com Entrega Expressa: Sorocaba, Votorantim, Araçoiaba da Serra, Salto de Pirapora, Itu e região.
+
+## Principais Departamentos
+- Rações e Nutrição Canina: Rações Super Premium, Premium Especial e Medicamentosas para cães filhotes, adultos e idosos (Premier Pet, Royal Canin, Golden, Fórmula Natural).
+- Rações e Nutrição Felina: Rações para gatos castrados, controle de bolas de pelo e sachês úmidos gourmet.
+- Farmácia Veterinária Especializada: Antipulgas e carrapatos (Simparic Zoetis, Bravecto MSD, Nexgard Boehringer), vermífugos (Drontal, Endogard), antibióticos, anti-inflamatórios e suplementos articulares.
+- Linha Agro & Criação: Nutrição de alta performance para cavalos atletas, rações balanceadas para aves de postura e corte, bovinos, suínos e suplementos minerais.
+- Conforto & Acessórios: Camas ortopédicas e donuts nuvem, coleiras, guias, caixas de transporte e comedouros ergonômicos.
+
+## Políticas Comerciais e Diferenciais
+- Desconto Pix: 5% de desconto automático no checkout.
+- Parcelamento: Até 3x sem juros no cartão de crédito.
+- Frete Express: Entregas prioritárias no mesmo dia ou em até 24h em Sorocaba e Votorantim.
+- Suporte Veterinário: Atendimento direto pelo WhatsApp para auxílio com dosagens e receitas veterinárias.
+
+## Links para Navegação e Documentação
+- Página Inicial: https://agropet-pr1me.com.br/
+- Catálogo Completo: https://agropet-pr1me.com.br/categorias
+- Farmácia Veterinária: https://agropet-pr1me.com.br/categorias/farmacia
+- Quem Somos: https://agropet-pr1me.com.br/quem-somos
+- Perguntas Frequentes: https://agropet-pr1me.com.br/faq
+- Contato & Loja Física: https://agropet-pr1me.com.br/contato
