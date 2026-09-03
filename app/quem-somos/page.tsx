@@ -1,11 +1,9 @@
-import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 
 export default function AboutPage() {
   return (
     <>
-      <Header />
-      <main className="max-w-4xl mx-auto px-4 py-12">
+            <main className="max-w-4xl mx-auto px-4 py-12">
         <h1 className="text-3xl font-bold text-[#000000] mb-8">Quem Somos</h1>
         <div className="prose max-w-none">
           <p className="text-lg text-gray-600 mb-4">
