@@ -24,12 +24,12 @@ export function Header() {
   };
 
   const navDepartments = [
-    { label: 'CÃ£es', href: '/categorias/cachorros' },
+    { label: 'Cães', href: '/categorias/cachorros' },
     { label: 'Gatos', href: '/categorias/gatos' },
-    { label: 'PÃ¡ssaros', href: '/categorias/passaros' },
+    { label: 'Pássaros', href: '/categorias/passaros' },
     { label: 'Cavalos & Agro', href: '/categorias/agro' },
-    { label: 'FarmÃ¡cia & Medicamentos', href: '/categorias/farmacia' },
-    { label: 'AcessÃ³rios & Brinquedos', href: '/categorias/conforto' },
+    { label: 'Farmácia & Medicamentos', href: '/categorias/farmacia' },
+    { label: 'Acessórios & Brinquedos', href: '/categorias/conforto' },
     { label: 'Ofertas Prime', href: '#destaques' },
   ];
 
@@ -41,9 +41,9 @@ export function Header() {
           <div className="flex items-center gap-3 sm:gap-4">
             <span className="flex items-center gap-1.5 text-gray-200">
               <span className="material-symbols-outlined text-[#12C0E0] text-[16px]">local_shipping</span>
-              <span>Entregas rÃ¡pidas em Sorocaba e regiÃ£o</span>
+              <span>Entregas rápidas em Sorocaba e região</span>
             </span>
-            <span className="hidden md:inline text-gray-500">â€¢</span>
+            <span className="hidden md:inline text-gray-500">⬢</span>
             <a
               href="https://wa.me/5515996580804"
               target="_blank"
@@ -58,7 +58,7 @@ export function Header() {
           <div className="flex items-center gap-4 sm:gap-6">
             <span className="hidden lg:flex items-center gap-1.5 text-gray-300">
               <span className="material-symbols-outlined text-[#12C0E0] text-[16px]">location_on</span>
-              <span>R. AntÃ´nio Silva Saladino, 878 - Pq. VitÃ³ria RÃ©gia</span>
+              <span>R. Antônio Silva Saladino, 878 - Pq. Vitória Régia</span>
             </span>
             <span className="flex items-center gap-1.5 text-gray-200">
               <span className="material-symbols-outlined text-[#F59E0B] text-[16px]">verified</span>
@@ -100,7 +100,7 @@ export function Header() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="O que seu pet ou criaÃ§Ã£o precisa hoje?"
+                placeholder="O que seu pet ou criação precisa hoje?"
                 className="bg-transparent w-full text-[#0B0F17] placeholder:text-gray-500 outline-none text-xs sm:text-sm font-medium"
               />
               <button

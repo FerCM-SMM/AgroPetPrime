@@ -11,27 +11,26 @@ export function Hero() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (search.trim()) {
-      router.push(`/categorias?busca=${encodeURIComponent(search.trim())}`);
+      router.push('/categorias?busca=' + encodeURIComponent(search.trim()));
     }
   };
 
   return (
-    <section className="relative w-full bg-[#faf8f5] overflow-hidden">
-      {/* Decorative subtle background paw prints */}
-      <div className="absolute top-10 left-12 text-[#12C0E0]/15 select-none pointer-events-none transform -rotate-12">
+    <section className="relative w-full bg-[#f4efe7] overflow-hidden min-h-[580px] lg:min-h-[640px] flex flex-col justify-between">
+      {/* Subtle background decorative pet paw prints */}
+      <div className="absolute top-12 left-10 text-[#12C0E0]/15 select-none pointer-events-none transform -rotate-12 z-0">
         <span className="material-symbols-outlined text-[64px]">pets</span>
       </div>
-      <div className="absolute top-1/2 right-8 text-[#D97706]/10 select-none pointer-events-none transform rotate-45">
-        <span className="material-symbols-outlined text-[80px]">pets</span>
-      </div>
-      <div className="absolute bottom-16 left-1/3 text-[#12C0E0]/10 select-none pointer-events-none">
-        <span className="material-symbols-outlined text-[48px]">pets</span>
+      <div className="absolute top-1/3 left-1/2 text-[#D97706]/10 select-none pointer-events-none transform rotate-45 z-0">
+        <span className="material-symbols-outlined text-[72px]">pets</span>
       </div>
 
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 lg:pt-14 lg:pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      {/* Hero Content Container */}
+      <div className="relative max-w-[1280px] w-full mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14 pb-8 lg:pb-0 z-10 flex-1 flex items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center w-full min-h-[480px]">
+          
           {/* Left Column: Clean Editorial, Search & Trust Badges */}
-          <div className="lg:col-span-7 flex flex-col items-start z-10">
+          <div className="lg:col-span-6 flex flex-col items-start z-20 max-w-xl">
             {/* Eyebrow Pill */}
             <div className="inline-flex items-center gap-2 bg-[#12C0E0]/15 text-[#00687b] text-xs font-extrabold px-3.5 py-1.5 rounded-full mb-4 border border-[#12C0E0]/30 shadow-2xs">
               <span className="material-symbols-outlined text-[16px] text-[#00687b]">verified</span>
@@ -39,21 +38,21 @@ export function Hero() {
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-3xl sm:text-4xl lg:text-[54px] font-extrabold text-[#0B0F17] tracking-tight leading-[1.15] mb-4">
+            <h1 className="text-3xl sm:text-4xl lg:text-[52px] font-extrabold text-[#0B0F17] tracking-tight leading-[1.12] mb-4">
               O Melhor Cuidado <br />
               para seu Pet com a{' '}
               <span className="text-[#00687b] italic font-serif">Nutrição Ideal</span>
             </h1>
 
             {/* Explanatory Paragraph */}
-            <p className="text-sm sm:text-base text-gray-600 max-w-xl mb-8 leading-relaxed">
-              Encontre rações super premium, farmácia veterinária completa, petiscos naturais e artigos para o campo. Tudo com pronta entrega para Sorocaba e região com atendimento amigo.
+            <p className="text-sm sm:text-base text-gray-700 max-w-lg mb-8 leading-relaxed font-medium">
+              Rações super premium selecionadas, farmácia veterinária especializada e artigos para o campo. Tudo com pronta entrega para Sorocaba e região com atendimento amigo.
             </p>
 
-            {/* Pill Search Form (Inspired by reference) */}
+            {/* Pill Search Form */}
             <form
               onSubmit={handleSearch}
-              className="w-full max-w-lg bg-white rounded-full p-1.5 sm:p-2 flex items-center shadow-lg border border-gray-200 focus-within:border-[#12C0E0] transition-all mb-8"
+              className="w-full max-w-md bg-white rounded-full p-1.5 sm:p-2 flex items-center shadow-lg border border-gray-200/80 focus-within:border-[#12C0E0] transition-all mb-8"
             >
               <div className="flex items-center pl-3 sm:pl-4 text-gray-400">
                 <span className="material-symbols-outlined text-[20px] text-[#12C0E0]">search</span>
@@ -67,52 +66,47 @@ export function Hero() {
               />
               <button
                 type="submit"
-                className="bg-[#0B0F17] hover:bg-gray-800 text-white text-xs sm:text-sm font-extrabold px-6 sm:px-8 py-3 rounded-full transition-all shrink-0 shadow-md hover-lift active-press"
+                className="bg-[#0B0F17] hover:bg-gray-800 text-white text-xs sm:text-sm font-extrabold px-6 sm:px-7 py-3 rounded-full transition-all shrink-0 shadow-md hover-lift active-press"
               >
                 Buscar
               </button>
             </form>
 
-            {/* 3 Trust Pillars (Directly matched to reference) */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 w-full max-w-lg text-xs font-bold text-gray-700">
-              <div className="flex items-center gap-2 bg-white/70 backdrop-blur-xs px-3 py-2 rounded-xl border border-gray-100 shadow-2xs">
+            {/* 3 Trust Pillars */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 w-full max-w-md text-xs font-bold text-gray-800">
+              <div className="flex items-center gap-2 bg-white/80 backdrop-blur-xs px-3 py-2.5 rounded-xl border border-gray-200/60 shadow-2xs">
                 <span className="material-symbols-outlined text-[#10B981] text-[18px]">eco</span>
                 <span>100% Originais</span>
               </div>
-              <div className="flex items-center gap-2 bg-white/70 backdrop-blur-xs px-3 py-2 rounded-xl border border-gray-100 shadow-2xs">
+              <div className="flex items-center gap-2 bg-white/80 backdrop-blur-xs px-3 py-2.5 rounded-xl border border-gray-200/60 shadow-2xs">
                 <span className="material-symbols-outlined text-[#00687b] text-[18px]">health_and_safety</span>
-                <span>Apoio Veterinário</span>
+                <span>Apoio Vet</span>
               </div>
-              <div className="flex items-center gap-2 bg-white/70 backdrop-blur-xs px-3 py-2 rounded-xl border border-gray-100 shadow-2xs">
+              <div className="flex items-center gap-2 bg-white/80 backdrop-blur-xs px-3 py-2.5 rounded-xl border border-gray-200/60 shadow-2xs">
                 <span className="material-symbols-outlined text-[#D97706] text-[18px]">bolt</span>
                 <span>Entrega Expressa</span>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Charismatic Pitbull with Food Bowl */}
-          <div className="lg:col-span-5 relative flex justify-center items-center">
-            <div className="relative w-full max-w-[460px] aspect-4/3 rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
+          {/* Right Column: Dog Grandão seamlessly integrated without any card border */}
+          <div className="lg:col-span-6 relative flex items-end justify-center lg:justify-end h-[360px] sm:h-[460px] lg:h-[560px] w-full mt-4 lg:mt-0">
+            <div className="relative w-full h-full max-w-[650px] flex items-end justify-center lg:justify-end">
               <Image
-                src="/images/hero-pitbull-bowl.jpg"
-                alt="Pitbull carismático e feliz com tigela de ração deliciosa na frente"
+                src="/images/hero-pitbull-grandona.jpg"
+                alt="Pitbull carismático grandão com pote de ração na Hero"
                 fill
                 priority
-                sizes="(max-width: 1024px) 100vw, 460px"
-                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 680px"
+                className="object-contain object-bottom select-none pointer-events-none"
               />
-              {/* Subtle quality badge overlay on top-left of image */}
-              <div className="absolute top-4 left-4 bg-[#0B0F17]/85 backdrop-blur-md text-white text-[11px] font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
-                <span className="material-symbols-outlined text-[#12C0E0] text-[16px]">favorite</span>
-                <span>Amado pelos Pets</span>
-              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom Organic Wave & Dark Metrics Bar (Like the reference image) */}
-      <div className="w-full bg-[#0B0F17] text-white py-6 border-t border-gray-800">
+      {/* Bottom Dark Metrics Bar */}
+      <div className="w-full bg-[#0B0F17] text-white py-6 border-t border-gray-800 relative z-20 shadow-md">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div className="flex flex-col items-center">
