@@ -1,0 +1,11 @@
+﻿{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": ["app/**/{page,layout,loading,error,not-found}.tsx", "instrumentation.ts"],
+  "project": ["app/**/*.{ts,tsx}", "components/**/*.{ts,tsx}", "lib/**/*.{ts,tsx}", "hooks/**/*.{ts,tsx}"],
+  "ignoreDependencies": [
+    "tailwindcss",
+    "@tailwindcss/postcss",
+    "tailwindcss-animate",
+    "tw-animate-css"
+  ]
+}
