@@ -1,11 +1,9 @@
-import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 
 export default function TermsPage() {
   return (
     <>
-      <Header />
-      <main className="max-w-4xl mx-auto px-4 py-12">
+            <main className="max-w-4xl mx-auto px-4 py-12">
         <h1 className="text-3xl font-bold text-[#000000] mb-8">Termos de Uso</h1>
         <div className="prose max-w-none text-gray-600 space-y-4">
           <p><strong>1. Aceitacao dos Termos</strong> - Ao acessar nosso site, voce concorda com estes termos de uso.</p>
