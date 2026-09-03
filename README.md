@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+﻿# 🐾 AgroPet Pr1me - E-commerce & Pet Care
 
-## Getting Started
+Plataforma moderna de comércio eletrônico especializada em nutrição, medicamentos, acessórios e equipamentos para animais domésticos (cães e gatos) e animais de fazenda/campo (equinos, bovinos e aves).
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🎨 Identidade Visual & Design System
+- **Cyan Pr1me (`#12c0e0`):** Ações primárias, CTAs em pílula, indicador de carrinho e badges de destaque.
+- **Preto / Carvão (`#000000` / `#0f172a`):** Tipografia de alta fidelidade e contraste.
+- **Dourado / Âmbar (`#fbbf24`):** Avaliações de clientes e selos promocionais.
+- **Superfícies Acolhedoras:** Fundo quente em tom creme suave com cartões elevados em branco puro e cantos arredondados (`rounded-3xl`).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Tecnologias & Arquitetura
+- **Framework:** [Next.js 16](https://nextjs.org/) (App Router, Server Components & React 19)
+- **Estilização:** [Tailwind CSS v4](https://tailwindcss.com/) com design system customizado
+- **Banco de Dados & Auth:** [Supabase](https://supabase.com/) (PostgreSQL com Row Level Security)
+- **Animações & Motion:** [Design Motion Principles](https://github.com/kylezantos/design-motion-principles) (Jakub Krehel & Emil Kowalski)
+- **Qualidade & Lint:** Biome, Commitlint, Knip, Arch-Contract e Stryker
+- **Testes:** Vitest, Testing Library e Playwright (E2E)
+- **Observabilidade:** Sentry, OpenTelemetry, Datadog e NewRelic
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🚀 Como Executar Localmente
 
-To learn more about Next.js, take a look at the following resources:
+1. **Instale as dependências:**
+   ```bash
+   npm install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. **Configure as variáveis de ambiente:**
+   Crie o arquivo `.env.local` com as chaves do Supabase:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=sua-anon-key
+   SUPABASE_SERVICE_ROLE_KEY=sua-service-role-key
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. **Inicie o servidor de desenvolvimento:**
+   ```bash
+   npm run dev
+   ```
+   Acesse [http://localhost:3000](http://localhost:3000).
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📋 Governança, Issues e Pull Requests
+- Toda tarefa deve obrigatoriamente possuir uma [GitHub Issue](https://github.com/FerCM-SMM/AgroPetPrime/issues) associada.
+- Deploys são gerenciados por Pull Requests na branch `main`.
+- Veja os detalhes completos em [`AGENTS.md`](./AGENTS.md) e [`CONTRIBUTING.md`](./CONTRIBUTING.md).
