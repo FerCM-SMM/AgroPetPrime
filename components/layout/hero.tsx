@@ -1,121 +1,150 @@
 'use client';
 
-import Link from 'next/link';
+import { useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 export function Hero() {
+  const router = useRouter();
+  const [search, setSearch] = useState('');
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (search.trim()) {
+      router.push(`/categorias?busca=${encodeURIComponent(search.trim())}`);
+    }
+  };
+
   return (
-    <section className="relative w-full overflow-hidden bg-[#ebebea] min-h-[580px] lg:min-h-[640px] flex items-center py-12">
-      {/* Subtle Background Watermark */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden z-0 opacity-15">
-        <span className="text-[#0B0F17] text-[120px] md:text-[200px] lg:text-[280px] font-extrabold tracking-tighter leading-none whitespace-nowrap transform -translate-y-6 md:-translate-y-10">
-          pet prime
-        </span>
+    <section className="relative w-full bg-[#faf8f5] overflow-hidden">
+      {/* Decorative subtle background paw prints */}
+      <div className="absolute top-10 left-12 text-[#12C0E0]/15 select-none pointer-events-none transform -rotate-12">
+        <span className="material-symbols-outlined text-[64px]">pets</span>
+      </div>
+      <div className="absolute top-1/2 right-8 text-[#D97706]/10 select-none pointer-events-none transform rotate-45">
+        <span className="material-symbols-outlined text-[80px]">pets</span>
+      </div>
+      <div className="absolute bottom-16 left-1/3 text-[#12C0E0]/10 select-none pointer-events-none">
+        <span className="material-symbols-outlined text-[48px]">pets</span>
       </div>
 
-      {/* Dog Hero Image positioned centrally */}
-      <div className="absolute inset-0 flex justify-center items-end pointer-events-none z-10">
-        <div className="relative h-[80%] sm:h-[88%] md:h-[94%] max-h-[620px] w-full max-w-xl transform lg:translate-x-6">
-          <Image
-            src="https://lh3.googleusercontent.com/aida/AEtjO1VZG7VfjwYNU3t0CsgXFZbHpgcDVy0yBM556UxfNDax_H4-aogah_niOElZffQuQZz3T9te0f_uRewV3Aco6f4hS7EVZISJO5LC0Zn47EVr_kBNlInDznyHA7yyMfo4CnTZTUdtMdFqJ2fOZQvfrl5JrpoggXJEEerhh3PwuZ1gSE93Tl1EqQoe-1m53heWT4Jyf2hqQsYlGvmIPafKwA0S2SUrx9l3sVuEbhBMrlOoJho2d0BW7lZGCw"
-            alt="Pitbull nobre e amigável vestindo moletom com capuz"
-            fill
-            priority
-            sizes="(max-width: 768px) 100vw, 600px"
-            className="object-contain object-bottom"
-          />
-        </div>
-      </div>
-
-      {/* Foreground Container with 3-column balanced grid */}
-      <div className="relative z-20 max-w-[1280px] w-full mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center min-h-[480px]">
-          {/* Left Column: Editorial & CTA Block */}
-          <div className="lg:col-span-5 flex flex-col items-start pt-4 lg:pt-0 max-w-lg">
-            {/* Big Hero Headline styled with crisp contrast */}
-            <h1 className="text-[#0B0F17] tracking-tight leading-[1.1] mb-6 text-[34px] sm:text-[44px] lg:text-[50px] font-extrabold">
-              O Destino Definitivo <br />
-              <span className="text-gray-600 font-medium">para seu Pet &amp; Campo</span>
-            </h1>
-
-            {/* Pill CTA Buttons */}
-            <div className="flex flex-wrap items-center gap-3 mb-6">
-              <Link
-                href="#destaques"
-                className="inline-flex items-center justify-center bg-[#12C0E0] hover:bg-[#00A8C7] text-black text-sm px-7 py-3 rounded-full shadow-md hover:shadow-lg transition-all font-extrabold hover-lift active-press"
-              >
-                <span>Conheça as Ofertas</span>
-              </Link>
-              <Link
-                href="/categorias"
-                className="inline-flex items-center justify-center bg-white hover:bg-gray-50 text-[#0B0F17] text-sm px-7 py-3 rounded-full shadow-xs hover:shadow-md transition-all border border-gray-200 font-bold hover-lift active-press"
-              >
-                <span>Todos os Produtos</span>
-              </Link>
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 lg:pt-14 lg:pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          {/* Left Column: Clean Editorial, Search & Trust Badges */}
+          <div className="lg:col-span-7 flex flex-col items-start z-10">
+            {/* Eyebrow Pill */}
+            <div className="inline-flex items-center gap-2 bg-[#12C0E0]/15 text-[#00687b] text-xs font-extrabold px-3.5 py-1.5 rounded-full mb-4 border border-[#12C0E0]/30 shadow-2xs">
+              <span className="material-symbols-outlined text-[16px] text-[#00687b]">verified</span>
+              <span>NUTRIÇÃO &amp; CUIDADO PR1ME</span>
             </div>
 
-            {/* Reassurance Badges Pill */}
-            <div className="inline-flex items-center gap-2 text-xs font-bold text-[#0B0F17]/85 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-gray-200 shadow-xs">
-              <span className="material-symbols-outlined text-[#10B981] text-[18px]">check_circle</span>
-              <span>100% Produtos Originais • Entrega Rápida em Sorocaba</span>
+            {/* Main Headline */}
+            <h1 className="text-3xl sm:text-4xl lg:text-[54px] font-extrabold text-[#0B0F17] tracking-tight leading-[1.15] mb-4">
+              O Melhor Cuidado <br />
+              para seu Pet com a{' '}
+              <span className="text-[#00687b] italic font-serif">Nutrição Ideal</span>
+            </h1>
+
+            {/* Explanatory Paragraph */}
+            <p className="text-sm sm:text-base text-gray-600 max-w-xl mb-8 leading-relaxed">
+              Encontre rações super premium, farmácia veterinária completa, petiscos naturais e artigos para o campo. Tudo com pronta entrega para Sorocaba e região com atendimento amigo.
+            </p>
+
+            {/* Pill Search Form (Inspired by reference) */}
+            <form
+              onSubmit={handleSearch}
+              className="w-full max-w-lg bg-white rounded-full p-1.5 sm:p-2 flex items-center shadow-lg border border-gray-200 focus-within:border-[#12C0E0] transition-all mb-8"
+            >
+              <div className="flex items-center pl-3 sm:pl-4 text-gray-400">
+                <span className="material-symbols-outlined text-[20px] text-[#12C0E0]">search</span>
+              </div>
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Qual ração ou medicamento seu pet precisa?"
+                className="w-full bg-transparent px-3 text-xs sm:text-sm text-[#0B0F17] placeholder:text-gray-400 outline-none font-medium"
+              />
+              <button
+                type="submit"
+                className="bg-[#0B0F17] hover:bg-gray-800 text-white text-xs sm:text-sm font-extrabold px-6 sm:px-8 py-3 rounded-full transition-all shrink-0 shadow-md hover-lift active-press"
+              >
+                Buscar
+              </button>
+            </form>
+
+            {/* 3 Trust Pillars (Directly matched to reference) */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 w-full max-w-lg text-xs font-bold text-gray-700">
+              <div className="flex items-center gap-2 bg-white/70 backdrop-blur-xs px-3 py-2 rounded-xl border border-gray-100 shadow-2xs">
+                <span className="material-symbols-outlined text-[#10B981] text-[18px]">eco</span>
+                <span>100% Originais</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white/70 backdrop-blur-xs px-3 py-2 rounded-xl border border-gray-100 shadow-2xs">
+                <span className="material-symbols-outlined text-[#00687b] text-[18px]">health_and_safety</span>
+                <span>Apoio Veterinário</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white/70 backdrop-blur-xs px-3 py-2 rounded-xl border border-gray-100 shadow-2xs">
+                <span className="material-symbols-outlined text-[#D97706] text-[18px]">bolt</span>
+                <span>Entrega Expressa</span>
+              </div>
             </div>
           </div>
 
-          {/* Center Spacer reserved for dog visual */}
-          <div className="hidden lg:block lg:col-span-3 pointer-events-none"></div>
+          {/* Right Column: Charismatic Pitbull with Food Bowl */}
+          <div className="lg:col-span-5 relative flex justify-center items-center">
+            <div className="relative w-full max-w-[460px] aspect-4/3 rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
+              <Image
+                src="/images/hero-pitbull-bowl.jpg"
+                alt="Pitbull carismático e feliz com tigela de ração deliciosa na frente"
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 460px"
+                className="object-cover"
+              />
+              {/* Subtle quality badge overlay on top-left of image */}
+              <div className="absolute top-4 left-4 bg-[#0B0F17]/85 backdrop-blur-md text-white text-[11px] font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
+                <span className="material-symbols-outlined text-[#12C0E0] text-[16px]">favorite</span>
+                <span>Amado pelos Pets</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-          {/* Right Column: Clean Floating Product Cards */}
-          <div className="lg:col-span-4 flex flex-row lg:flex-col gap-4 justify-end items-end mt-6 lg:mt-0">
-            {/* Floating Card 1: Premier Formula 15kg */}
-            <div className="bg-white rounded-3xl p-4 shadow-xl w-44 md:w-52 backdrop-blur-md transform transition-all duration-300 hover:-translate-y-1 border border-gray-100 hover-lift">
-              <div className="relative w-full aspect-square bg-[#f6f6f6] rounded-2xl flex items-center justify-center p-2 mb-2 overflow-hidden">
-                <Image
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLjV5W5nC3XQkXwwsJ-zzHFDaLwjYLTA3ssLwdXzElv8_P7lHBDs1L-QhUTr5zi_5OwUmPNgYJY0H52HdccZq6zVIB4RfvOZ0kgpsAsuHQo5a693llZYG_zeQAK6uoqobber8rtXLZdo3HJOGY9GNxuhzY9rTXVziGzsBk8mA-hliNviiGhab6U6qTifNtPGWVcfDmoCWYegn1Da1SyoixARlehvRhkHTi9mVV0yyr3TsuFYMHe-7Q"
-                  alt="Premier Formula 15kg"
-                  fill
-                  sizes="200px"
-                  className="object-contain p-2"
-                />
+      {/* Bottom Organic Wave & Dark Metrics Bar (Like the reference image) */}
+      <div className="w-full bg-[#0B0F17] text-white py-6 border-t border-gray-800">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div className="flex flex-col items-center">
+              <div className="flex items-center gap-2 text-[#12C0E0] mb-0.5">
+                <span className="material-symbols-outlined text-[22px]">group</span>
+                <span className="text-xl sm:text-2xl font-extrabold text-white">+10.000</span>
               </div>
-              <div className="flex items-center gap-0.5 text-[#D97706] mb-1">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: '"FILL" 1' }}>
-                    star
-                  </span>
-                ))}
-              </div>
-              <span className="text-[13px] text-[#0B0F17] font-bold line-clamp-1 block">
-                Premier Formula 15kg
-              </span>
-              <span className="text-[16px] text-[#00687b] font-extrabold">
-                R$ 237,70
-              </span>
+              <span className="text-xs text-gray-400 font-medium">Clientes Felizes</span>
             </div>
 
-            {/* Floating Card 2: Simparic 80mg Cães */}
-            <div className="bg-white rounded-3xl p-4 shadow-xl w-44 md:w-52 backdrop-blur-md transform transition-all duration-300 hover:-translate-y-1 border border-gray-100 hover-lift">
-              <div className="relative w-full aspect-square bg-[#f6f6f6] rounded-2xl flex items-center justify-center p-2 mb-2 overflow-hidden">
-                <Image
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2RTizwlF1mzVgaRF1qk68KmR2VEOQ-WXa1EqTJnJbxHTVnhyPfjucaPx03Wb8iMYh_Hd13I6My3WkGxl2AQxjnPuzjJDqqm4ZAnDTiBRj9QDDYH85CNmGcRAtHGN3k-tTVwrItbU98jOlK7yCcgBsjWzIgLmqqC7fvZlpsaGN6Pd-q5tj3ILni7MqVWNy6v4N8QYby3jRMMwZORCiyKkQWBtRJ513BZxkLApP9DdgKX--UHwoeV9b"
-                  alt="Simparic 80mg Cães"
-                  fill
-                  sizes="200px"
-                  className="object-contain p-2"
-                />
+            <div className="flex flex-col items-center">
+              <div className="flex items-center gap-2 text-[#10B981] mb-0.5">
+                <span className="material-symbols-outlined text-[22px]">shopping_bag</span>
+                <span className="text-xl sm:text-2xl font-extrabold text-white">+500</span>
               </div>
-              <div className="flex items-center gap-0.5 text-[#D97706] mb-1">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: '"FILL" 1' }}>
-                    star
-                  </span>
-                ))}
+              <span className="text-xs text-gray-400 font-medium">Produtos em Estoque</span>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <div className="flex items-center gap-2 text-[#D97706] mb-0.5">
+                <span className="material-symbols-outlined text-[22px]">local_shipping</span>
+                <span className="text-xl sm:text-2xl font-extrabold text-white">24h a 48h</span>
               </div>
-              <span className="text-[13px] text-[#0B0F17] font-bold line-clamp-1 block">
-                Simparic 80mg Cães
-              </span>
-              <span className="text-[16px] text-[#00687b] font-extrabold">
-                R$ 119,90
-              </span>
+              <span className="text-xs text-gray-400 font-medium">Entrega em Sorocaba</span>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <div className="flex items-center gap-2 text-[#F59E0B] mb-0.5">
+                <span className="material-symbols-outlined text-[22px]" style={{ fontVariationSettings: '"FILL" 1' }}>star</span>
+                <span className="text-xl sm:text-2xl font-extrabold text-white">4.9 / 5</span>
+              </div>
+              <span className="text-xs text-gray-400 font-medium">Avaliação Google</span>
             </div>
           </div>
         </div>
