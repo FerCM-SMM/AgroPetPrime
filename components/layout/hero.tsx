@@ -16,7 +16,7 @@ export function Hero() {
   };
 
   return (
-    <section className="relative w-full bg-[#faf8f5] overflow-hidden min-h-[580px] lg:min-h-[660px] flex flex-col justify-between">
+    <section className="relative w-full bg-[#faf8f5] overflow-visible min-h-[580px] lg:min-h-[640px] xl:min-h-[680px] flex flex-col justify-between">
       {/* Decorative ambient subtle pet paw prints in background */}
       <div className="absolute top-10 left-8 text-[#12C0E0]/15 select-none pointer-events-none transform -rotate-12 z-0">
         <span className="material-symbols-outlined text-[64px]">pets</span>
@@ -24,16 +24,16 @@ export function Hero() {
       <div className="absolute top-1/4 left-1/3 text-[#D97706]/10 select-none pointer-events-none transform rotate-45 z-0">
         <span className="material-symbols-outlined text-[80px]">pets</span>
       </div>
-      <div className="absolute bottom-20 left-12 text-[#10B981]/10 select-none pointer-events-none z-0">
+      <div className="absolute bottom-24 left-10 text-[#10B981]/10 select-none pointer-events-none z-0">
         <span className="material-symbols-outlined text-[52px]">pets</span>
       </div>
 
       {/* Main Container */}
-      <div className="relative max-w-[1320px] w-full mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-0 z-10 flex-1 flex items-end">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-end w-full">
+      <div className="relative max-w-[1360px] w-full mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-0 z-10 flex-1 flex items-end">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-end w-full">
           
           {/* Left Column: Clean Editorial, Search & Trust Badges */}
-          <div className="lg:col-span-6 flex flex-col items-start z-20 pb-10 sm:pb-14 lg:pb-16 max-w-xl">
+          <div className="lg:col-span-6 flex flex-col justify-center items-start z-20 pb-8 sm:pb-12 lg:pb-16 max-w-xl">
             {/* Eyebrow Pill */}
             <div className="inline-flex items-center gap-2 bg-[#12C0E0]/15 text-[#00687b] text-xs font-extrabold px-4 py-1.5 rounded-full mb-4 border border-[#12C0E0]/30 shadow-2xs">
               <span className="material-symbols-outlined text-[16px] text-[#00687b]">verified</span>
@@ -49,7 +49,7 @@ export function Hero() {
 
             {/* Sub-headline */}
             <p className="text-sm sm:text-base text-gray-700 max-w-lg mb-8 leading-relaxed font-medium">
-              Rações super premium selecionadas, farmácia veterinária completa e artigos para o campo. Tudo com pronta entrega para Sorocaba e região com atendimento amigo.
+              Rações super premium selecionadas, farmácia veterinária especializada e artigos para o campo. Tudo com pronta entrega para Sorocaba e região com atendimento amigo.
             </p>
 
             {/* Search Pill Form */}
@@ -92,15 +92,16 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Right Column: Pitbull Grandão Vazado em PNG (Sem bordas, cobrindo o espaço) */}
-          <div className="lg:col-span-6 relative flex items-end justify-center lg:justify-end w-full h-[380px] sm:h-[480px] lg:h-[580px] xl:h-[640px] z-10 -mb-px">
-            <div className="relative w-full h-full max-w-[620px] lg:max-w-[780px] xl:max-w-[860px] flex items-end justify-center lg:justify-end">
+          {/* Right Column: Pitbull Monumental Vazado (90-100% altura, sangria no topo, base alinhada) */}
+          <div className="lg:col-span-6 relative flex items-end justify-center w-full h-[380px] sm:h-[480px] lg:h-[620px] xl:h-[680px] z-10 -mb-px overflow-visible">
+            {/* Tightly cropped image wrapper extending upwards with bleed */}
+            <div className="relative w-full h-full max-w-[500px] sm:max-w-[580px] lg:max-w-[650px] xl:max-w-[700px] flex items-end justify-center lg:-mt-10">
               <Image
-                src="/images/hero-pitbull-cutout.png"
+                src="/images/hero-pitbull-tight.png"
                 alt="Pitbull carismático e feliz com tigela de ração saudável AgroPet Prime"
                 fill
                 priority
-                sizes="(max-width: 1024px) 100vw, 860px"
+                sizes="(max-width: 1024px) 100vw, 700px"
                 className="object-contain object-bottom select-none pointer-events-none drop-shadow-2xl"
               />
             </div>
