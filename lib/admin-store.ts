@@ -1,5 +1,4 @@
-
-export interface Customer {
+﻿export interface Customer {
   id: string;
   name: string;
   email: string;
@@ -47,11 +46,12 @@ export interface AdminProduct {
 }
 
 const STORAGE_KEYS = {
-  CUSTOMERS: 'agropet_admin_customers_v1',
-  ORDERS: 'agropet_admin_orders_v1',
-  PRODUCTS: 'agropet_admin_products_v1',
+  CUSTOMERS: 'agropet_admin_customers_v2',
+  ORDERS: 'agropet_admin_orders_v2',
+  PRODUCTS: 'agropet_admin_products_v2',
 };
 
+// Seed de Clientes com caracteres acentuados 100% perfeitos
 const SEED_CUSTOMERS: Customer[] = [
   {
     id: 'cli-001',
@@ -62,10 +62,10 @@ const SEED_CUSTOMERS: Customer[] = [
     orders_count: 6,
     total_spent: 1340.50,
     last_order_date: new Date(Date.now() - 42 * 24 * 60 * 60 * 1000).toISOString(),
-    consumption_habits: ['RaÃ§Ãµes Super Premium', 'Pitbull & Porte Grande', 'Antipulgas Simparic'],
+    consumption_habits: ['Rações Super Premium', 'Pitbull & Porte Grande', 'Antipulgas Simparic'],
     purchase_frequency_days: 30,
     cashback_balance: 67.00,
-    notes: 'Costuma comprar saco de 15kg de raÃ§Ã£o a cada mÃªs. Tutor de Pitbull.',
+    notes: 'Costuma comprar saco de 15kg de ração a cada mês. Tutor de Pitbull.',
     created_at: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
@@ -77,7 +77,7 @@ const SEED_CUSTOMERS: Customer[] = [
     orders_count: 4,
     total_spent: 620.00,
     last_order_date: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
-    consumption_habits: ['SachÃªs & Petiscos Gourmet', 'Gatos Castrados', 'Areia SÃ­lica'],
+    consumption_habits: ['Sachês & Petiscos Gourmet', 'Gatos Castrados', 'Areia Sílica'],
     purchase_frequency_days: 20,
     cashback_balance: 31.00,
     notes: 'Tem 2 gatos persas. Adora novidades em caminhas e brinquedos.',
@@ -85,17 +85,17 @@ const SEED_CUSTOMERS: Customer[] = [
   },
   {
     id: 'cli-003',
-    name: 'Fazenda Boa EsperanÃ§a (Dr. Roberto)',
+    name: 'Fazenda Boa Esperança (Dr. Roberto)',
     email: 'contato@boaesperanca.agr.br',
     phone: '(15) 99655-0921',
     address: 'Rodovia SP-127, Km 15 - Zona Rural, Itapetininga/SP',
     orders_count: 9,
     total_spent: 4890.00,
     last_order_date: new Date(Date.now() - 38 * 24 * 60 * 60 * 1000).toISOString(),
-    consumption_habits: ['SuplementaÃ§Ã£o Equina', 'Selaria & Couro', 'VermÃ­fugos Grandes Animais'],
+    consumption_habits: ['Suplementação Equina', 'Selaria & Couro', 'Vermífugos Grandes Animais'],
     purchase_frequency_days: 35,
     cashback_balance: 244.50,
-    notes: 'CriatÃ³rio de cavalos Quarto de Milha. Compra em grande volume.',
+    notes: 'Criação de cavalos Quarto de Milha. Compra em grande volume.',
     created_at: new Date(Date.now() - 250 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
@@ -110,11 +110,12 @@ const SEED_CUSTOMERS: Customer[] = [
     consumption_habits: ['Shampoos Veganos', 'Escovas de Bambu', 'Petiscos Naturais'],
     purchase_frequency_days: 45,
     cashback_balance: 11.99,
-    notes: 'Prefere linhas naturais e ecolÃ³gicas para seu Golden Retriever.',
+    notes: 'Prefere linhas naturais e ecológicas para seu Golden Retriever.',
     created_at: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
   },
 ];
 
+// Seed de Pedidos com nomes e pagamentos acentuados corretamente
 const SEED_ORDERS: Order[] = [
   {
     id: 'PED-1024',
@@ -129,7 +130,7 @@ const SEED_ORDERS: Order[] = [
     items: [
       {
         product_id: '1',
-        product_name: 'RaÃ§Ã£o Super Premium Aurora Holistic Nutrition CÃ£es Adultos 12kg',
+        product_name: 'Ração Super Premium Aurora Holistic Nutrition Cães Adultos 12kg',
         quantity: 2,
         unit_price: 189.90,
         image: '/images/prod-dog-food.jpg',
@@ -144,7 +145,7 @@ const SEED_ORDERS: Order[] = [
     total: 199.80,
     status: 'delivered',
     created_at: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
-    payment_method: 'CartÃ£o de CrÃ©dito',
+    payment_method: 'Cartão de Crédito',
     observation: 'Interfone 42.',
     items: [
       {
@@ -156,7 +157,7 @@ const SEED_ORDERS: Order[] = [
       },
       {
         product_id: '3',
-        product_name: 'Brinquedo PelÃºcia Raposinha Plush Squeaky com Corda',
+        product_name: 'Brinquedo Pelúcia Raposinha Plush Squeaky com Corda',
         quantity: 1,
         unit_price: 49.90,
         image: '/images/prod-pet-toy.jpg',
@@ -172,7 +173,7 @@ const SEED_ORDERS: Order[] = [
     status: 'shipped',
     created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
     payment_method: 'PIX',
-    observation: 'Deixar com a vizinha se eu nÃ£o estiver.',
+    observation: 'Deixar com a vizinha se eu não estiver.',
     items: [
       {
         product_id: '4',
@@ -183,13 +184,34 @@ const SEED_ORDERS: Order[] = [
       },
     ],
   },
+  {
+    id: 'PED-1027',
+    customer_name: 'Fazenda Boa Esperança (Dr. Roberto)',
+    customer_phone: '(15) 99655-0921',
+    customer_address: 'Rodovia SP-127, Km 15 - Zona Rural, Itapetininga/SP',
+    total: 749.70,
+    status: 'processing',
+    created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    payment_method: 'Boleto Bancário',
+    observation: 'Nota fiscal de produtor rural solicitada.',
+    items: [
+      {
+        product_id: '6',
+        product_name: 'Suplemento Vitamínico Mineral Equino Muscle Horse Turbo 2.5kg',
+        quantity: 3,
+        unit_price: 249.90,
+        image: '/images/prod-pet-bed.jpg',
+      },
+    ],
+  },
 ];
 
+// Seed de Produtos com nomes e categorias acentuados corretamente
 const SEED_PRODUCTS: AdminProduct[] = [
   {
     id: '1',
-    name: 'RaÃ§Ã£o Super Premium Aurora Holistic Nutrition CÃ£es Adultos 12kg',
-    category: 'RaÃ§Ãµes',
+    name: 'Ração Super Premium Aurora Holistic Nutrition Cães Adultos 12kg',
+    category: 'Rações',
     price: 189.90,
     stock: 45,
     sku: 'RAC-AUR-12KG',
@@ -198,7 +220,7 @@ const SEED_PRODUCTS: AdminProduct[] = [
   {
     id: '2',
     name: 'Caminha Donut Faux-Fur Nuvem Ultra Macia Bege',
-    category: 'AcessÃ³rios',
+    category: 'Acessórios',
     price: 149.90,
     stock: 6,
     sku: 'CAM-DON-BEG',
@@ -206,7 +228,7 @@ const SEED_PRODUCTS: AdminProduct[] = [
   },
   {
     id: '3',
-    name: 'Brinquedo PelÃºcia Raposinha Plush Squeaky com Corda',
+    name: 'Brinquedo Pelúcia Raposinha Plush Squeaky com Corda',
     category: 'Brinquedos',
     price: 49.90,
     stock: 60,
@@ -216,7 +238,7 @@ const SEED_PRODUCTS: AdminProduct[] = [
   {
     id: '4',
     name: 'Kit Banho & Tosa: Shampoo Ultra-Gentle 473ml + Escova Bambu Natural',
-    category: 'Higiene & FarmÃ¡cia',
+    category: 'Higiene & Farmácia',
     price: 89.90,
     stock: 0,
     sku: 'HIG-KIT-BAMBU',
@@ -224,8 +246,8 @@ const SEED_PRODUCTS: AdminProduct[] = [
   },
   {
     id: '5',
-    name: 'Antipulgas e Carrapatos NexGard Spectra para CÃ£es 15 a 30kg',
-    category: 'FarmÃ¡cia VeterinÃ¡ria',
+    name: 'Antipulgas e Carrapatos NexGard Spectra para Cães 15 a 30kg',
+    category: 'Farmácia Veterinária',
     price: 135.00,
     stock: 4,
     sku: 'FAR-NEX-1530',
@@ -233,7 +255,7 @@ const SEED_PRODUCTS: AdminProduct[] = [
   },
   {
     id: '6',
-    name: 'Suplemento VitamÃ­nico Mineral Equino Muscle Horse Turbo 2.5kg',
+    name: 'Suplemento Vitamínico Mineral Equino Muscle Horse Turbo 2.5kg',
     category: 'Campo & Fazenda',
     price: 249.90,
     stock: 12,
@@ -372,11 +394,11 @@ export function recordCheckoutOrder(params: {
   const inferredHabits: string[] = [];
   params.items.forEach((item) => {
     const lower = item.product_name.toLowerCase();
-    if (lower.includes('raÃ§Ã£o') || lower.includes('holistic')) inferredHabits.push('RaÃ§Ãµes Premium');
-    if (lower.includes('cÃ£o') || lower.includes('cÃ£es') || lower.includes('pitbull')) inferredHabits.push('CÃ£es');
-    if (lower.includes('gato') || lower.includes('persa')) inferredHabits.push('Gatos');
+    if (lower.includes('ração') || lower.includes('holistic')) inferredHabits.push('Rações Super Premium');
+    if (lower.includes('cão') || lower.includes('cães') || lower.includes('pitbull')) inferredHabits.push('Cães Adultos');
+    if (lower.includes('gato') || lower.includes('persa')) inferredHabits.push('Gatos Castrados');
     if (lower.includes('banho') || lower.includes('shampoo')) inferredHabits.push('Higiene & Banho');
-    if (lower.includes('brinquedo')) inferredHabits.push('Brinquedos & AcessÃ³rios');
+    if (lower.includes('brinquedo')) inferredHabits.push('Brinquedos & Acessórios');
   });
 
   const cashbackEarned = Math.round(params.total * 0.05 * 100) / 100;
@@ -516,12 +538,12 @@ export function generateReactivationWhatsAppLink(customer: Customer): string {
   const primaryHabit = customer.consumption_habits[0] || 'seus produtos favoritos';
 
   const text = encodeURIComponent(
-    'OlÃ¡ ' + customer.name + '! Tudo bem?\n\n' +
-    'Aqui Ã© da equipe da *AgroPet Pr1me* ðŸ¾\n\n' +
-    'Sentimos sua falta! Notamos que faz cerca de *' + days + ' dias* desde a sua Ãºltima compra com a gente (' + primaryHabit + ').\n\n' +
-    'Seu pet jÃ¡ deve estar precisando de reposiÃ§Ã£o! Para comemorar seu retorno, vocÃª tem:\n' +
-    'ðŸŽ *R$ ' + customer.cashback_balance.toFixed(2) + '* de Cashback acumulado disponÃ­vel para abater no pedido!\n' +
-    'ðŸšš Use o cupom *VOLTOUPRIME* e ganhe *Frete GrÃ¡tis* na sua entrega hoje!\n\n' +
+    'Olá ' + customer.name + '! Tudo bem?\n\n' +
+    'Aqui é da equipe da *AgroPet Pr1me* 🐾\n\n' +
+    'Sentimos sua falta! Notamos que faz cerca de *' + days + ' dias* desde a sua última compra com a gente (' + primaryHabit + ').\n\n' +
+    'Seu pet já deve estar precisando de reposição! Para comemorar seu retorno, você tem:\n' +
+    '🎁 *R$ ' + customer.cashback_balance.toFixed(2) + '* de Cashback acumulado disponível para abater no pedido!\n' +
+    '🚚 Use o cupom *VOLTOUPRIME* e ganhe *Frete Grátis* na sua entrega hoje!\n\n' +
     'Posso separar o seu pedido agora mesmo?'
   );
 
