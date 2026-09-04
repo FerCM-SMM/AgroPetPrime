@@ -19,7 +19,7 @@ export function ProductDetailClient({ product, whatsapp }: { product: Product; w
     const msg = encodeURIComponent(
       `Olá AgroPet Pr1me! Gostaria de comprar:\n- ${product.name} — ${formatCurrency(product.price)}\nhttps://agropetpr1me.com.br/produto/${product.slug}`
     );
-    window.open(`https://wa.me/${whatsapp}?text=${msg}`, '_blank');
+    window.open(`https://wa.me/${whatsapp}?text=${msg}`, '_blank', 'noopener,noreferrer');
   };
 
   return (

@@ -148,7 +148,7 @@ export default function AdminMarketingPage() {
     const days = getDaysSinceLastOrder(customer.last_order_date);
     const msg = currentRule.template(customer, days);
     const url = `https://wa.me/${finalPhone}?text=${encodeURIComponent(msg)}`;
-    window.open(url, '_blank');
+    window.open(url, '_blank', 'noopener,noreferrer');
     toast.success(`Abrindo WhatsApp para enviar campanha a ${customer.name}!`);
   };
 

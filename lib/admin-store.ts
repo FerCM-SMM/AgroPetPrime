@@ -276,7 +276,8 @@ export function getStoredCustomers(): Customer[] {
       localStorage.setItem(STORAGE_KEYS.CUSTOMERS, JSON.stringify(SEED_CUSTOMERS));
       return SEED_CUSTOMERS;
     }
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : SEED_CUSTOMERS;
   } catch {
     return SEED_CUSTOMERS;
   }
@@ -325,7 +326,8 @@ export function getStoredOrders(): Order[] {
       localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(SEED_ORDERS));
       return SEED_ORDERS;
     }
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : SEED_ORDERS;
   } catch {
     return SEED_ORDERS;
   }
@@ -452,7 +454,8 @@ export function getStoredProducts(): AdminProduct[] {
       localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(SEED_PRODUCTS));
       return SEED_PRODUCTS;
     }
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : SEED_PRODUCTS;
   } catch {
     return SEED_PRODUCTS;
   }
