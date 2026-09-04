@@ -95,7 +95,7 @@ export default function CheckoutPage() {
           `========================\n` +
           `Aguardando confirmação de entrega!`
       );
-      window.open(`https://wa.me/${whatsapp}?text=${message}`, '_blank');
+      window.open(`https://wa.me/${whatsapp}?text=${message}`, '_blank', 'noopener,noreferrer');
       toast.success('Pedido registrado com sucesso! Redirecionando para o WhatsApp.');
       clearCart();
     } catch (err: unknown) {

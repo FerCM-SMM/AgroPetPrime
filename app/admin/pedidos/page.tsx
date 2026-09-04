@@ -133,7 +133,7 @@ export default function AdminOrdersPage() {
       `💰 Total: *R$ ${order.total.toFixed(2)}*\n\n` +
       `Se precisar de qualquer informação, estamos à disposição por aqui!`
     );
-    window.open(`https://wa.me/${phoneWithCountry}?text=${msg}`, '_blank');
+    window.open(`https://wa.me/${phoneWithCountry}?text=${msg}`, '_blank', 'noopener,noreferrer');
   };
 
   const getStatusBadge = (status: Order['status']) => {
