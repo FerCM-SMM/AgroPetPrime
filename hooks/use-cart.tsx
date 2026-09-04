@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { createContext, useContext, useCallback, useEffect, useMemo, useState } from 'react';
 import type { Product } from '@/types/schema';
@@ -12,6 +12,8 @@ type CartContextType = {
   items: CartItem[];
   count: number;
   total: number;
+  totalItems: number;
+  totalPrice: number;
   addItem: (product: Product, quantity?: number) => void;
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
@@ -81,12 +83,22 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const count = useMemo(() => items.reduce((sum, i) => sum + i.quantity, 0), [items]);
   const total = useMemo(
-    () => items.reduce((sum, i) => sum + i.product.price * i.quantity, 0),
+    () => items.reduce((sum, i) => sum + (i.product.price || 0) * i.quantity, 0),
     [items]
   );
 
   const value = useMemo(
-    () => ({ items, count, total, addItem, removeItem, updateQuantity, clearCart }),
+    () => ({
+      items,
+      count,
+      total,
+      totalItems: count,
+      totalPrice: total,
+      addItem,
+      removeItem,
+      updateQuantity,
+      clearCart,
+    }),
     [items, count, total, addItem, removeItem, updateQuantity, clearCart]
   );
 
