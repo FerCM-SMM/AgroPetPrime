@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,6 +12,7 @@ import {
   BarChart3,
   Store,
   ShieldCheck,
+  Sparkles,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -21,7 +22,8 @@ const navItems = [
   { href: '/admin/estoque', label: 'Controle de Estoque', icon: Boxes },
   { href: '/admin/pedidos', label: 'Pedidos do Site', icon: ShoppingCart },
   { href: '/admin/clientes', label: 'Base de Clientes & CRM', icon: Users },
-  { href: '/admin/analytics', label: 'Relatórios & Métricas', icon: BarChart3 },
+  { href: '/admin/marketing', label: 'Automação de Marketing', icon: Sparkles },
+  { href: '/admin/analytics', label: 'Power BI & Métricas', icon: BarChart3 },
 ];
 
 export function Sidebar() {
