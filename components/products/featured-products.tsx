@@ -2,19 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { ShoppingCart, Star, Flame, Check } from 'lucide-react';
 import { useCart } from '@/hooks/use-cart';
 import { toast } from 'sonner';
-import {
-  Star,
-  ShoppingCart,
-  Check,
-  Flame,
-  ShieldCheck,
-  Zap,
-  Tag,
-  ArrowRight,
-} from 'lucide-react';
 
 interface ProductItem {
   id: string;
@@ -43,7 +33,7 @@ const PRODUCTS_DATA: ProductItem[] = [
     rating: 5,
     reviewsCount: 142,
     isBestSeller: true,
-    badges: ['-18% OFF', 'Campeão de Vendas'],
+    badges: ['-18% OFF', 'Mais Vendido'],
     sizes: ['1kg', '15kg', '20kg'],
   },
   {
@@ -142,8 +132,22 @@ export function FeaturedProducts() {
         }
       }
     };
-    window.addEventListener('user-journey-change', handleJourneyChange);
-    return () => window.removeEventListener('user-journey-change', handleJourneyChange);
+
+    window.addEventListener('agropet-journey-change', handleJourneyChange);
+    try {
+      const stored = localStorage.getItem('agropet-user-journey');
+      if (stored === 'agro') {
+        setUserJourney('agro');
+        setActiveTab('agro');
+      } else if (stored === 'pet') {
+        setUserJourney('pet');
+        setActiveTab('caes');
+      }
+    } catch {}
+
+    return () => {
+      window.removeEventListener('agropet-journey-change', handleJourneyChange);
+    };
   }, []);
 
   const handleSelectSize = (productId: string, size: string) => {
@@ -153,26 +157,33 @@ export function FeaturedProducts() {
   const handleAddToCart = (product: ProductItem) => {
     const chosenSize = selectedSizes[product.id] || product.sizes[0];
     addItem({
-      id: product.id,
+      id: `${product.id}-${chosenSize}`,
       name: `${product.name} (${chosenSize})`,
+      slug: product.id,
       price: product.price,
-      image: product.image,
-      category: product.category,
+      stock: 50,
+      category_id: product.category,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      image_urls: [product.image],
     });
-    toast.success(`"${product.name.slice(0, 24)}... (${chosenSize})" adicionado ao carrinho!`);
+    toast.success(`Adicionado: ${product.name} (${chosenSize})`);
   };
 
-  // Filtra e reordena os produtos conforme aba e jornada
+  // Filtra produtos de acordo com a aba e prioriza jornada
   const filteredProducts = PRODUCTS_DATA.filter((p) => {
     if (activeTab === 'all') return true;
-    return p.category === activeTab;
+    if (activeTab === 'caes') return p.category === 'caes';
+    if (activeTab === 'gatos') return p.category === 'gatos';
+    if (activeTab === 'agro') return p.category === 'agro';
+    if (activeTab === 'farmacia') return p.category === 'farmacia';
+    return true;
   }).sort((a, b) => {
-    // Se a jornada for agro, puxa produtos do campo para o topo
     if (userJourney === 'agro') {
       if (a.category === 'agro' && b.category !== 'agro') return -1;
       if (b.category === 'agro' && a.category !== 'agro') return 1;
     }
-    // Caso contrário, "Mais Vendido" fica no primeiro slot
+    // "Mais Vendido" fica em destaque
     if (a.isBestSeller && !b.isBestSeller) return -1;
     if (b.isBestSeller && !a.isBestSeller) return 1;
     return 0;
@@ -185,7 +196,7 @@ export function FeaturedProducts() {
         {/* Cabeçalho da Seção */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
-            <span className="text-xs font-bold text-[#E06F12] uppercase tracking-wider block mb-1">
+            <span className="text-xs font-semibold text-[#E06F12] block mb-1">
               Catálogo Selecionado
             </span>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-[#20241F] tracking-tight">
@@ -204,7 +215,7 @@ export function FeaturedProducts() {
               onClick={() => setActiveTab('all')}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
                 activeTab === 'all'
-                  ? 'bg-[#20241F] text-white shadow-sm'
+                  ? 'bg-[#20241F] text-white shadow-xs'
                   : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-[#20241F]'
               }`}
             >
@@ -214,17 +225,17 @@ export function FeaturedProducts() {
               onClick={() => setActiveTab('caes')}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
                 activeTab === 'caes'
-                  ? 'bg-[#12c0e0] text-[#20241F] shadow-sm'
+                  ? 'bg-[#12c0e0] text-[#20241F] shadow-xs'
                   : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-[#12c0e0]'
               }`}
             >
-              Cães Adultos &amp; Filhotes
+              Cães Adultos
             </button>
             <button
               onClick={() => setActiveTab('gatos')}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
                 activeTab === 'gatos'
-                  ? 'bg-[#12c0e0] text-[#20241F] shadow-sm'
+                  ? 'bg-[#12c0e0] text-[#20241F] shadow-xs'
                   : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-[#12c0e0]'
               }`}
             >
@@ -234,8 +245,8 @@ export function FeaturedProducts() {
               onClick={() => setActiveTab('farmacia')}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
                 activeTab === 'farmacia'
-                  ? 'bg-[#10b981] text-white shadow-sm'
-                  : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-[#10b981]'
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-emerald-600'
               }`}
             >
               Farmácia Veterinária
@@ -244,7 +255,7 @@ export function FeaturedProducts() {
               onClick={() => setActiveTab('agro')}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
                 activeTab === 'agro'
-                  ? 'bg-[#3591A1] text-white shadow-sm'
+                  ? 'bg-[#3591A1] text-white shadow-xs'
                   : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-[#3591A1]'
               }`}
             >
@@ -253,7 +264,7 @@ export function FeaturedProducts() {
           </div>
         </div>
 
-        {/* GRID DE PRODUTOS: Quebra do padrão "kit SaaS" */}
+        {/* GRID DE PRODUTOS: Quebra do padrão kit SaaS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredProducts.map((product) => {
             const isHighlighted = product.isBestSeller;
@@ -264,7 +275,7 @@ export function FeaturedProducts() {
                 key={product.id}
                 className={`group relative rounded-3xl transition-all duration-300 flex flex-col justify-between overflow-hidden ${
                   isHighlighted
-                    ? 'bg-[#FFF9F2] border-2 border-[#E06F12]/30 shadow-md sm:col-span-2 lg:col-span-1'
+                    ? 'bg-[#FFF9F2] border-2 border-[#E06F12]/40 shadow-md sm:col-span-2 lg:col-span-1'
                     : 'bg-white border border-[#8B5F3A]/15 hover:border-[#12c0e0]/50 hover:shadow-lg shadow-xs'
                 }`}
               >
@@ -274,9 +285,9 @@ export function FeaturedProducts() {
                     {product.badges.map((badge, idx) => (
                       <span
                         key={idx}
-                        className={`text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider ${
+                        className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider ${
                           badge.includes('Vendido')
-                            ? 'bg-[#E06F12] text-white flex items-center gap-1 shadow-xs'
+                            ? 'bg-[#E06F12] text-white flex items-center gap-1 shadow-xs font-black'
                             : badge.includes('OFF')
                             ? 'bg-[#20241F] text-[#12c0e0]'
                             : 'bg-[#3591A1]/15 text-[#00829B]'
@@ -289,7 +300,7 @@ export function FeaturedProducts() {
                   </div>
 
                   <span className="text-[11px] font-bold text-gray-400">
-                    {product.brand.split('•')[0]}
+                    {product.brand.split(' ')[0]}
                   </span>
                 </div>
 
@@ -300,6 +311,7 @@ export function FeaturedProducts() {
                       src={product.image}
                       alt={product.name}
                       fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 300px"
                       className="object-contain"
                     />
                   </div>
@@ -321,7 +333,7 @@ export function FeaturedProducts() {
                     </div>
 
                     {/* Nome do Produto */}
-                    <h3 className="font-extrabold text-sm text-[#20241F] leading-snug line-clamp-2 group-hover:text-[#00829B] transition-colors">
+                    <h3 className="font-bold text-sm text-[#20241F] leading-snug line-clamp-2 group-hover:text-[#12c0e0] transition-colors">
                       {product.name}
                     </h3>
                   </div>
@@ -336,7 +348,7 @@ export function FeaturedProducts() {
                         R$ {product.price.toFixed(2)}
                       </span>
                     </div>
-                    <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
                       PIX ou Cartão
                     </span>
                   </div>
@@ -344,10 +356,10 @@ export function FeaturedProducts() {
                   {/* AÇÃO NO HOVER: Opções de peso/tamanho com botão de 1 clique direto no card */}
                   <div className="mt-4 pt-3 border-t border-dashed border-gray-200">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-[11px] font-semibold text-gray-500">
+                      <span className="text-[11px] font-medium text-gray-500">
                         Embalagem / Tamanho:
                       </span>
-                      <span className="text-xs font-black text-[#20241F]">
+                      <span className="text-xs font-bold text-[#20241F]">
                         {currentSize}
                       </span>
                     </div>
@@ -374,7 +386,7 @@ export function FeaturedProducts() {
                     <button
                       type="button"
                       onClick={() => handleAddToCart(product)}
-                      className="w-full py-2.5 px-4 rounded-xl font-extrabold text-xs bg-[#20241F] hover:bg-[#12c0e0] text-white hover:text-[#20241F] flex items-center justify-center gap-2 transition-all shadow-sm hover:scale-[1.02] active:scale-[0.98]"
+                      className="w-full py-2.5 px-4 rounded-xl font-bold text-xs bg-[#20241F] hover:bg-[#12c0e0] text-white hover:text-[#20241F] flex items-center justify-center gap-2 transition-all shadow-xs hover:scale-[1.02] active:scale-[0.98]"
                     >
                       <ShoppingCart className="w-3.5 h-3.5" />
                       <span>Adicionar ao Carrinho</span>
