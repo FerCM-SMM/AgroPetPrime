@@ -1,23 +1,34 @@
-'use client';
+﻿'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '@/hooks/use-cart';
 import { toast } from 'sonner';
+import {
+  Star,
+  ShoppingCart,
+  Check,
+  Flame,
+  ShieldCheck,
+  Zap,
+  Tag,
+  ArrowRight,
+} from 'lucide-react';
 
 interface ProductItem {
   id: string;
   name: string;
   brand: string;
-  category: string;
+  category: 'caes' | 'gatos' | 'farmacia' | 'agro' | 'conforto';
   price: number;
   oldPrice: number;
   image: string;
   rating: number;
   reviewsCount: number;
+  isBestSeller?: boolean;
   badges: string[];
-  unitBadge?: string;
+  sizes: string[];
 }
 
 const PRODUCTS_DATA: ProductItem[] = [
@@ -31,7 +42,9 @@ const PRODUCTS_DATA: ProductItem[] = [
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCLjV5W5nC3XQkXwwsJ-zzHFDaLwjYLTA3ssLwdXzElv8_P7lHBDs1L-QhUTr5zi_5OwUmPNgYJY0H52HdccZq6zVIB4RfvOZ0kgpsAsuHQo5a693llZYG_zeQAK6uoqobber8rtXLZdo3HJOGY9GNxuhzY9rTXVziGzsBk8mA-hliNviiGhab6U6qTifNtPGWVcfDmoCWYegn1Da1SyoixARlehvRhkHTi9mVV0yyr3TsuFYMHe-7Q',
     rating: 5,
     reviewsCount: 142,
-    badges: ['-18% OFF', 'Mais Vendido'],
+    isBestSeller: true,
+    badges: ['-18% OFF', 'Campeão de Vendas'],
+    sizes: ['1kg', '15kg', '20kg'],
   },
   {
     id: 'prod-royal-canin-cat',
@@ -44,6 +57,7 @@ const PRODUCTS_DATA: ProductItem[] = [
     rating: 5,
     reviewsCount: 98,
     badges: ['-15% OFF'],
+    sizes: ['1.5kg', '7.5kg', '10kg'],
   },
   {
     id: 'prod-simparic-80mg',
@@ -56,6 +70,7 @@ const PRODUCTS_DATA: ProductItem[] = [
     rating: 5,
     reviewsCount: 215,
     badges: ['Frete Sorocaba Grátis', 'Original Zoetis'],
+    sizes: ['1 comp.', '3 comp.'],
   },
   {
     id: 'prod-equinos-25kg',
@@ -68,245 +83,307 @@ const PRODUCTS_DATA: ProductItem[] = [
     rating: 5,
     reviewsCount: 47,
     badges: ['Linha Campo & Haras'],
-    unitBadge: 'Saca',
+    sizes: ['25kg', '40kg'],
   },
   {
-    id: 'prod-bravecto-10-20',
-    name: 'Bravecto Cães de 10 a 20kg Comprimido Mastigável (500mg)',
-    brand: 'MSD Saúde Animal',
-    category: 'farmacia',
-    price: 219.90,
-    oldPrice: 259.00,
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDuXLWGzzXajtsjUTNXpDxiXgdfG_n88d5xfszvRvUGJ0qx6bnXDxByU-joakfC7wXeyPfJRvUALgVwIMSUtM43HRPz89Qfb1mgERS96qSsjKEn42ZJiFuZ_0SvJ9HdgQXY_2GYXNld9WghFVNK9YlxuQXLrHlXv0Y0LJ_Vy7oComedc_XceAv7fEhvihJweqaGZWNx4IC2qmukYkUNaxxbJ1R0mx8wbZn0KtWdZJA9PSv2xUeplkQa',
-    rating: 5,
-    reviewsCount: 310,
-    badges: ['Proteção 12 Semanas'],
-  },
-  {
-    id: 'prod-mistura-aves-1kg',
-    name: 'Mistura Especial Super Premium Calopsita & Agapornis 1kg',
-    brand: 'Nutrição de Aves',
-    category: 'passaros',
-    price: 22.80,
-    oldPrice: 29.90,
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAJi21R4VuEfMOdOtp_RPZFGeDgYMvjaluYuv1fjO5bBhWWmqkISP0E6NLFhYCJzFcM8ows0dMmJIHT-FiIL7Zb0LRyESzKpUNNsugaOWVqkjD_Kt4lUjLHqPJi8yWsgCC03p0_E_WIOqB8A9ovQQRSu7fPI3wDf5sX6g7aotFHllo2HGRqNAEdaZhOcaIQx_wNqcWlntpKlzj3X1oek08Z7YC4qJiwjaH1xUN-wNKHTzb6ckkaZZ1O',
+    id: 'prod-caminha-donut',
+    name: 'Caminha Donut Faux-Fur Nuvem Ultra Macia Lavável Bege',
+    brand: 'AgroPet Prime • Conforto',
+    category: 'conforto',
+    price: 149.90,
+    oldPrice: 189.90,
+    image: '/images/prod-pet-bed.jpg',
     rating: 5,
     reviewsCount: 84,
-    badges: ['100% Natural'],
+    badges: ['Toque Macio'],
+    sizes: ['P (50cm)', 'M (70cm)', 'G (90cm)'],
+  },
+  {
+    id: 'prod-shampoo-bambu',
+    name: 'Kit Banho & Tosa: Shampoo Hipoalergênico 473ml + Escova Bambu',
+    brand: 'Higiene & Estética Natural',
+    category: 'farmacia',
+    price: 89.90,
+    oldPrice: 110.00,
+    image: '/images/prod-grooming.jpg',
+    rating: 5,
+    reviewsCount: 63,
+    badges: ['Fórmula Vegana'],
+    sizes: ['473ml', '1 Litro'],
   },
 ];
 
 export function FeaturedProducts() {
   const { addItem } = useCart();
-  const [selectedFilter, setSelectedFilter] = useState('todos');
-  const [favorites, setFavorites] = useState<Record<string, boolean>>({});
+  const [activeTab, setActiveTab] = useState<'all' | 'caes' | 'gatos' | 'agro' | 'farmacia'>('all');
+  const [userJourney, setUserJourney] = useState<'all' | 'pet' | 'agro'>('all');
 
-  const filterOptions = [
-    { label: 'Todos os Itens', value: 'todos' },
-    { label: 'Cães Adultos', value: 'caes' },
-    { label: 'Gatos Castrados', value: 'gatos' },
-    { label: 'Antiparasitários', value: 'farmacia' },
-    { label: 'Linha Cavalos', value: 'agro' },
-  ];
+  // Seletores rápidos de tamanho/peso no card
+  const [selectedSizes, setSelectedSizes] = useState<Record<string, string>>({
+    'prod-premier-15kg': '15kg',
+    'prod-royal-canin-cat': '7.5kg',
+    'prod-simparic-80mg': '1 comp.',
+    'prod-equinos-25kg': '25kg',
+    'prod-caminha-donut': 'M (70cm)',
+    'prod-shampoo-bambu': '473ml',
+  });
 
-  const filteredProducts =
-    selectedFilter === 'todos'
-      ? PRODUCTS_DATA
-      : PRODUCTS_DATA.filter((p) => p.category === selectedFilter);
-
-  const toggleFavorite = (id: string) => {
-    setFavorites((prev) => {
-      const nextState = !prev[id];
-      if (nextState) {
-        toast.success('Adicionado aos favoritos! ♡');
+  // Ouve a jornada selecionada no Header
+  useEffect(() => {
+    const handleJourneyChange = (e: any) => {
+      if (e.detail) {
+        setUserJourney(e.detail);
+        if (e.detail === 'agro') {
+          setActiveTab('agro');
+        } else if (e.detail === 'pet') {
+          setActiveTab('caes');
+        } else {
+          setActiveTab('all');
+        }
       }
-      return { ...prev, [id]: nextState };
-    });
+    };
+    window.addEventListener('user-journey-change', handleJourneyChange);
+    return () => window.removeEventListener('user-journey-change', handleJourneyChange);
+  }, []);
+
+  const handleSelectSize = (productId: string, size: string) => {
+    setSelectedSizes((prev) => ({ ...prev, [productId]: size }));
   };
 
   const handleAddToCart = (product: ProductItem) => {
+    const chosenSize = selectedSizes[product.id] || product.sizes[0];
     addItem({
       id: product.id,
-      name: product.name,
+      name: `${product.name} (${chosenSize})`,
       price: product.price,
       image: product.image,
-      quantity: 1,
+      category: product.category,
     });
-    toast.success(`${product.name.slice(0, 32)}... adicionado ao carrinho! ✓`);
+    toast.success(`"${product.name.slice(0, 24)}... (${chosenSize})" adicionado ao carrinho!`);
   };
 
+  // Filtra e reordena os produtos conforme aba e jornada
+  const filteredProducts = PRODUCTS_DATA.filter((p) => {
+    if (activeTab === 'all') return true;
+    return p.category === activeTab;
+  }).sort((a, b) => {
+    // Se a jornada for agro, puxa produtos do campo para o topo
+    if (userJourney === 'agro') {
+      if (a.category === 'agro' && b.category !== 'agro') return -1;
+      if (b.category === 'agro' && a.category !== 'agro') return 1;
+    }
+    // Caso contrário, "Mais Vendido" fica no primeiro slot
+    if (a.isBestSeller && !b.isBestSeller) return -1;
+    if (b.isBestSeller && !a.isBestSeller) return 1;
+    return 0;
+  });
+
   return (
-    <section className="w-full py-16 bg-[#eff4ff]" id="destaques">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
-        {/* Section Header with Quick Filters */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
+    <section id="destaques" className="w-full py-16 sm:py-20 bg-[#FFFDF8]">
+      <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Cabeçalho da Seção */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
-            <div className="flex items-center gap-1.5 text-[#00687b] text-xs uppercase tracking-wider font-extrabold mb-1">
-              <span className="material-symbols-outlined text-[16px]">local_fire_department</span>
-              <span>Alta Procura na Região de Sorocaba</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0B0F17]">
-              Destaques &amp; Mais Vendidos
+            <span className="text-xs font-bold text-[#E06F12] uppercase tracking-wider block mb-1">
+              Catálogo Selecionado
+            </span>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-[#20241F] tracking-tight">
+              Destaques para seu Pet &amp; Campo
             </h2>
           </div>
+          <p className="text-xs sm:text-sm text-[#20241F]/70 max-w-md">
+            Itens originais de alta nutrição e saúde, com entrega expressa para toda a região de Sorocaba.
+          </p>
+        </div>
 
-          {/* Filter pills */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-            {filterOptions.map((opt) => (
-              <button
-                key={opt.value}
-                type="button"
-                onClick={() => setSelectedFilter(opt.value)}
-                className={`font-bold text-xs px-4 py-2 rounded-full whitespace-nowrap transition-all ${
-                  selectedFilter === opt.value
-                    ? 'bg-[#0B0F17] text-white shadow-xs'
-                    : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
+        {/* FILTRO STICKY: Fixa no topo ao rolar a seção para facilitar a navegação */}
+        <div className="sticky top-16 sm:top-20 z-30 bg-[#FFFDF8]/95 backdrop-blur-md py-3.5 mb-8 border-y border-[#8B5F3A]/10">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+            <button
+              onClick={() => setActiveTab('all')}
+              className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
+                activeTab === 'all'
+                  ? 'bg-[#20241F] text-white shadow-sm'
+                  : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-[#20241F]'
+              }`}
+            >
+              Todos os Itens
+            </button>
+            <button
+              onClick={() => setActiveTab('caes')}
+              className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
+                activeTab === 'caes'
+                  ? 'bg-[#12c0e0] text-[#20241F] shadow-sm'
+                  : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-[#12c0e0]'
+              }`}
+            >
+              Cães Adultos &amp; Filhotes
+            </button>
+            <button
+              onClick={() => setActiveTab('gatos')}
+              className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
+                activeTab === 'gatos'
+                  ? 'bg-[#12c0e0] text-[#20241F] shadow-sm'
+                  : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-[#12c0e0]'
+              }`}
+            >
+              Gatos Castrados
+            </button>
+            <button
+              onClick={() => setActiveTab('farmacia')}
+              className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
+                activeTab === 'farmacia'
+                  ? 'bg-[#10b981] text-white shadow-sm'
+                  : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-[#10b981]'
+              }`}
+            >
+              Farmácia Veterinária
+            </button>
+            <button
+              onClick={() => setActiveTab('agro')}
+              className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
+                activeTab === 'agro'
+                  ? 'bg-[#3591A1] text-white shadow-sm'
+                  : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-[#3591A1]'
+              }`}
+            >
+              Campo &amp; Equinos
+            </button>
           </div>
         </div>
 
-        {/* 6 Product Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white rounded-3xl p-6 flex flex-col justify-between shadow-xs hover:shadow-xl transition-all duration-300 relative group border border-gray-100 hover-lift"
-            >
-              {/* Badges Left */}
-              <div className="absolute top-4 left-4 z-10 flex flex-col gap-1">
-                {product.badges.map((b, idx) => (
-                  <span
-                    key={idx}
-                    className={`font-extrabold text-[10px] px-2.5 py-0.5 rounded-full uppercase ${
-                      b.includes('OFF')
-                        ? 'bg-[#ba1a1a] text-white'
-                        : b.includes('Frete')
-                        ? 'bg-[#10B981] text-white'
-                        : b.includes('Original') || b.includes('Proteção')
-                        ? 'bg-[#00c0e3] text-black'
-                        : 'bg-[#0B0F17] text-white'
-                    }`}
-                  >
-                    {b}
-                  </span>
-                ))}
-              </div>
+        {/* GRID DE PRODUTOS: Quebra do padrão "kit SaaS" */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredProducts.map((product) => {
+            const isHighlighted = product.isBestSeller;
+            const currentSize = selectedSizes[product.id] || product.sizes[0];
 
-              {/* Wishlist Button Right */}
-              <button
-                type="button"
-                aria-label="Favoritar"
-                onClick={() => toggleFavorite(product.id)}
-                className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-[#eff4ff] text-gray-400 hover:text-red-500 hover:bg-white flex items-center justify-center transition-colors shadow-xs"
+            return (
+              <div
+                key={product.id}
+                className={`group relative rounded-3xl transition-all duration-300 flex flex-col justify-between overflow-hidden ${
+                  isHighlighted
+                    ? 'bg-[#FFF9F2] border-2 border-[#E06F12]/30 shadow-md sm:col-span-2 lg:col-span-1'
+                    : 'bg-white border border-[#8B5F3A]/15 hover:border-[#12c0e0]/50 hover:shadow-lg shadow-xs'
+                }`}
               >
-                <span
-                  className="material-symbols-outlined text-[20px]"
-                  style={favorites[product.id] ? { fontVariationSettings: '"FILL" 1', color: '#ef4444' } : {}}
-                >
-                  favorite
-                </span>
-              </button>
-
-              {/* Image Container */}
-              <div className="w-full aspect-square bg-white flex items-center justify-center p-4 mb-4 overflow-hidden rounded-2xl relative">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 400px"
-                  className="object-contain group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-
-              {/* Details */}
-              <div>
-                <div className="flex items-center gap-1.5 mb-1">
-                  <div className="flex text-[#F59E0B]">
-                    {[...Array(product.rating)].map((_, i) => (
+                {/* Top Badges */}
+                <div className="p-4 pb-0 flex items-center justify-between z-10">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {product.badges.map((badge, idx) => (
                       <span
-                        key={i}
-                        className="material-symbols-outlined text-[16px]"
-                        style={{ fontVariationSettings: '"FILL" 1' }}
+                        key={idx}
+                        className={`text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider ${
+                          badge.includes('Vendido')
+                            ? 'bg-[#E06F12] text-white flex items-center gap-1 shadow-xs'
+                            : badge.includes('OFF')
+                            ? 'bg-[#20241F] text-[#12c0e0]'
+                            : 'bg-[#3591A1]/15 text-[#00829B]'
+                        }`}
                       >
-                        star
+                        {badge.includes('Vendido') && <Flame className="w-3 h-3 fill-white" />}
+                        {badge}
                       </span>
                     ))}
                   </div>
-                  <span className="text-xs text-gray-500 font-medium">({product.reviewsCount})</span>
-                </div>
 
-                <span className="text-[11px] text-[#00687b] uppercase font-extrabold tracking-wider block">
-                  {product.brand}
-                </span>
-
-                <h3 className="font-extrabold text-sm sm:text-base text-[#0B0F17] mt-1 mb-2 line-clamp-2 leading-snug">
-                  {product.name}
-                </h3>
-
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs text-gray-400 line-through">
-                    R$ {product.oldPrice.toFixed(2).replace('.', ',')}
-                  </span>
-                  <span className="text-xl sm:text-2xl font-extrabold text-[#00687b]">
-                    R$ {product.price.toFixed(2).replace('.', ',')}
-                  </span>
-                  <span className="bg-[#00c0e3]/20 text-[#004a59] text-[10px] font-extrabold px-1.5 py-0.5 rounded">
-                    {product.unitBadge || 'PIX'}
+                  <span className="text-[11px] font-bold text-gray-400">
+                    {product.brand.split('•')[0]}
                   </span>
                 </div>
-              </div>
 
-              {/* Actions Bottom */}
-              <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
-                <button
-                  type="button"
-                  onClick={() => handleAddToCart(product)}
-                  className="flex-1 bg-[#0B0F17] hover:bg-gray-800 text-white text-xs font-extrabold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2 hover-lift active-press"
-                >
-                  <span className="material-symbols-outlined text-[18px]">shopping_bag</span>
-                  <span>Comprar Agora</span>
-                </button>
-                <button
-                  type="button"
-                  aria-label="Adicionar 1 unidade rápida"
-                  onClick={() => handleAddToCart(product)}
-                  className="w-11 h-11 rounded-xl bg-[#00c0e3] hover:bg-[#00A8C7] text-[#0B0F17] flex items-center justify-center transition-colors shadow-xs hover-lift active-press"
-                >
-                  <span className="material-symbols-outlined text-[20px]">add</span>
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+                {/* Imagem do Produto */}
+                <div className="relative w-full h-52 sm:h-56 p-4 flex items-center justify-center overflow-hidden">
+                  <div className="relative w-full h-full transition-transform duration-500 group-hover:scale-105">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                </div>
 
-        {/* Bottom Help Banner */}
-        <div className="mt-12 bg-white rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xs border border-gray-100">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-[#00c0e3]/20 flex items-center justify-center text-[#00687b] shrink-0">
-              <span className="material-symbols-outlined text-[24px]">support_agent</span>
-            </div>
-            <div>
-              <h4 className="font-extrabold text-base sm:text-lg text-[#0B0F17]">
-                Dúvidas sobre o peso ou dosagem ideal?
-              </h4>
-              <p className="text-xs sm:text-sm text-gray-600">
-                Nossa equipe do balcão em Sorocaba ajuda você a escolher o produto certo para o porte do seu pet.
-              </p>
-            </div>
-          </div>
-          <a
-            href="https://wa.me/5515996580804"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-[#eff4ff] hover:bg-[#dce9ff] text-[#0B0F17] text-xs font-bold px-6 py-3 rounded-full transition-all flex items-center gap-2 whitespace-nowrap hover-lift shrink-0"
-          >
-            <span className="material-symbols-outlined text-[#10B981] text-[18px]">chat</span>
-            <span>Falar no WhatsApp</span>
-          </a>
+                {/* Informações e Detalhes */}
+                <div className="p-5 pt-2 flex flex-col flex-1 justify-between">
+                  <div>
+                    {/* Avaliação em Estrelas */}
+                    <div className="flex items-center gap-1 mb-1.5">
+                      <div className="flex text-amber-400">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
+                        ))}
+                      </div>
+                      <span className="text-[11px] font-bold text-gray-400 ml-1">
+                        ({product.reviewsCount})
+                      </span>
+                    </div>
+
+                    {/* Nome do Produto */}
+                    <h3 className="font-extrabold text-sm text-[#20241F] leading-snug line-clamp-2 group-hover:text-[#00829B] transition-colors">
+                      {product.name}
+                    </h3>
+                  </div>
+
+                  {/* Preços */}
+                  <div className="mt-4 pt-3 border-t border-gray-100 flex items-baseline justify-between">
+                    <div>
+                      <span className="text-[11px] text-gray-400 line-through block">
+                        R$ {product.oldPrice.toFixed(2)}
+                      </span>
+                      <span className="text-xl font-black text-[#20241F]">
+                        R$ {product.price.toFixed(2)}
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                      PIX ou Cartão
+                    </span>
+                  </div>
+
+                  {/* AÇÃO NO HOVER: Opções de peso/tamanho com botão de 1 clique direto no card */}
+                  <div className="mt-4 pt-3 border-t border-dashed border-gray-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[11px] font-semibold text-gray-500">
+                        Embalagem / Tamanho:
+                      </span>
+                      <span className="text-xs font-black text-[#20241F]">
+                        {currentSize}
+                      </span>
+                    </div>
+
+                    {/* Botões rápidos de peso */}
+                    <div className="grid grid-cols-3 gap-1.5 mb-3">
+                      {product.sizes.map((size) => (
+                        <button
+                          key={size}
+                          type="button"
+                          onClick={() => handleSelectSize(product.id, size)}
+                          className={`py-1 px-1.5 rounded-lg text-[11px] font-bold transition-all text-center ${
+                            currentSize === size
+                              ? 'bg-[#12c0e0] text-[#20241F] shadow-xs'
+                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                          }`}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Botão Adicionar ao Carrinho */}
+                    <button
+                      type="button"
+                      onClick={() => handleAddToCart(product)}
+                      className="w-full py-2.5 px-4 rounded-xl font-extrabold text-xs bg-[#20241F] hover:bg-[#12c0e0] text-white hover:text-[#20241F] flex items-center justify-center gap-2 transition-all shadow-sm hover:scale-[1.02] active:scale-[0.98]"
+                    >
+                      <ShoppingCart className="w-3.5 h-3.5" />
+                      <span>Adicionar ao Carrinho</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
