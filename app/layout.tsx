@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Manrope, Fraunces } from 'next/font/google';
+import { Poppins, Archivo_Black } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
 import { Header } from '@/components/layout/header';
@@ -7,28 +7,28 @@ import { CookieBanner } from '@/components/layout/cookie-banner';
 import { FloatingWhatsApp } from '@/components/layout/floating-whatsapp';
 import { BottomNav } from '@/components/layout/bottom-nav';
 
-const manrope = Manrope({
+const poppins = Poppins({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
-  weight: ['400', '500', '600', '700', '800'],
+  weight: ['400', '500', '600', '700', '800', '900'],
 });
 
-const fraunces = Fraunces({
+const archivoBlack = Archivo_Black({
   subsets: ['latin'],
-  variable: '--font-serif',
+  variable: '--font-display',
   display: 'swap',
-  weight: ['600', '700'],
+  weight: ['400'],
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://agropet-pr1me.com.br'),
   title: {
-    default: 'AgroPet Prime - O Destino Definitivo para seu Pet & Campo em Sorocaba',
-    template: '%s | AgroPet Prime',
+    default: 'AgroPet Pr1me - O Destino Definitivo para seu Pet & Campo em Sorocaba',
+    template: '%s | AgroPet Pr1me',
   },
   description:
-    'AgroPet Prime: pet shop e agropecuária acolhedora em Sorocaba/SP. Rações super premium (Premier, Royal Canin), farmácia veterinária especializada (Simparic, Bravecto), linha agro/campo e entrega expressa.',
+    'AgroPet Pr1me: pet shop e agropecuária acolhedora em Sorocaba/SP. Rações super premium (Premier, Royal Canin), farmácia veterinária especializada (Simparic, Bravecto), linha agro/campo e entrega expressa.',
   keywords: [
     'pet shop sorocaba',
     'ração premier sorocaba',
@@ -41,9 +41,9 @@ export const metadata: Metadata = {
     'AgroPet Prime',
     'pet shop vitória régia sorocaba',
   ],
-  authors: [{ name: 'AgroPet Prime' }],
-  creator: 'AgroPet Prime',
-  publisher: 'AgroPet Prime',
+  authors: [{ name: 'AgroPet Pr1me' }],
+  creator: 'AgroPet Pr1me',
+  publisher: 'AgroPet Pr1me',
   formatDetection: {
     email: false,
     address: true,
@@ -60,11 +60,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className={`${manrope.variable} ${fraunces.variable} scroll-smooth`}>
+    <html lang="pt-BR" className={`${poppins.variable} ${archivoBlack.variable} scroll-smooth`}>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
-      <body className="min-h-screen font-sans bg-[#FFFDF8] text-[#20241F] antialiased selection:bg-[#12c0e0]/20 selection:text-[#00829B] pb-16 lg:pb-0">
+      <body className="min-h-screen font-sans bg-[#FFFFFF] text-[#000000] antialiased selection:bg-[#20BEE2]/30 selection:text-[#000000] pb-16 lg:pb-0">
         <Providers>
           <Header />
           {children}

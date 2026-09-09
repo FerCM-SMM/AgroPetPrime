@@ -9,25 +9,24 @@
   --color-foreground: var(--foreground);
   --color-border: var(--border);
 
-  /* Tokens Oficiais da Marca Pet Premium */
-  --color-azul-claro: #12c0e0;
-  --color-laranja-vivo: #E06F12;
-  --color-azul-secundario: #3591A1;
-  --color-areia: #8B5F3A;
-  --color-grafite: #20241F;
-  --color-branco-quente: #FFFDF8;
+  /* Tokens Oficiais IDV-AgroPetPrime.md */
+  --color-primary: #20BEE2;
+  --color-secondary: #000000;
+  --color-accent: #51FFE6;
+  --color-azul-agropet: #20BEE2;
+  --color-turquesa-menta: #51FFE6;
 
-  --color-brand-cyan: #12c0e0;
-  --color-brand-cyan-dark: #00829B;
-  --color-brand-dark: #20241F;
-  --color-obsidian-dark: #20241F;
-
-  --color-verde-prestige: #1C4E47;
-  --color-lime-vibe: #D8E934;
+  /* Suporte legado e compatibilidade */
+  --color-brand-cyan: #20BEE2;
+  --color-brand-cyan-dark: #0090A8;
+  --color-brand-dark: #000000;
+  --color-obsidian-dark: #0A0F12;
+  --color-verde-prestige: #0C2824;
+  --color-lime-vibe: #51FFE6;
   --color-stone-warm: #FAF7F2;
 
-  --font-sans: var(--font-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-serif: var(--font-serif), Georgia, Cambria, 'Times New Roman', serif;
+  --font-sans: var(--font-sans), 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: var(--font-display), 'Archivo Black', 'Poppins', sans-serif;
   
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
@@ -40,31 +39,68 @@
 }
 
 :root {
-  --background: #FFFDF8;
-  --foreground: #20241F;
+  --background: #FFFFFF;
+  --foreground: #000000;
   --card: #ffffff;
-  --card-foreground: #20241F;
+  --card-foreground: #000000;
   --popover: #ffffff;
-  --popover-foreground: #20241F;
-  --primary: #12c0e0;
-  --primary-foreground: #20241F;
-  --secondary: #FFFDF8;
-  --secondary-foreground: #20241F;
-  --muted: #f7f4ec;
-  --muted-foreground: #6b7280;
-  --accent: #FFFDF8;
-  --accent-foreground: #20241F;
-  --destructive: #ef4444;
-  --border: rgba(139, 95, 58, 0.15);
-  --input: rgba(139, 95, 58, 0.2);
-  --ring: #12c0e0;
+  --popover-foreground: #000000;
+  --primary: #20BEE2;
+  --primary-foreground: #000000;
+  --secondary: #000000;
+  --secondary-foreground: #ffffff;
+  --muted: #F3F4F6;
+  --muted-foreground: #4B5563;
+  --accent: #51FFE6;
+  --accent-foreground: #000000;
+  --destructive: #EF4444;
+  --border: rgba(0, 0, 0, 0.08);
+  --input: rgba(0, 0, 0, 0.12);
+  --ring: #20BEE2;
   --radius: 1rem;
 }
 
-@keyframes fadeSlideUp {
+/* Animações Principais */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes kenburns {
+  0% {
+    transform: scale(1.02) translate(0%, 0%);
+  }
+  50% {
+    transform: scale(1.10) translate(-1.5%, -1%);
+  }
+  100% {
+    transform: scale(1.02) translate(0%, 0%);
+  }
+}
+
+.animate-kenburns {
+  animation: kenburns 24s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(24px);
   }
   to {
     opacity: 1;
@@ -72,23 +108,15 @@
   }
 }
 
-@keyframes heroZoomIn {
-  from {
-    opacity: 0;
-    transform: scale(1.05);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Scroll suave e seleção personalizada */
+/* Scroll suave e tipografia */
 html {
   scroll-behavior: smooth;
 }
 
-/* Regras Tipográficas de Alto Padrão (/redesign-existing-projects) */
 h1, h2, h3, h4, h5, h6 {
   text-wrap: balance;
   letter-spacing: -0.02em;
@@ -98,17 +126,16 @@ p, li, blockquote {
   text-wrap: pretty;
 }
 
-/* Micro-interação ágil e feedback de foco acessível */
 button, a {
   transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 :focus-visible {
-  outline: 2px solid #12c0e0;
+  outline: 2px solid #20BEE2;
   outline-offset: 2px;
 }
 
 ::selection {
-  background-color: rgba(18, 192, 224, 0.25);
-  color: #00829B;
+  background-color: rgba(32, 190, 226, 0.25);
+  color: #000000;
 }
