@@ -1,309 +1,162 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import {
-  Search,
-  ShieldCheck,
-  Stethoscope,
-  Zap,
-  CheckCircle2,
-  ArrowRight,
-  Package,
-} from 'lucide-react';
-import { getStoredProducts, AdminProduct } from '@/lib/admin-store';
+import { Search, ShieldCheck, Stethoscope, Truck, MessageCircle, ArrowRight } from 'lucide-react';
 
-export function Hero() {
+interface HeroProps {
+  activeAudience?: 'pet' | 'agro';
+  onAudienceChange?: (audience: 'pet' | 'agro') => void;
+}
+
+export function Hero({ activeAudience = 'pet', onAudienceChange }: HeroProps) {
   const router = useRouter();
-  const heroRef = useRef<HTMLDivElement>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Estados de busca e autocomplete
-  const [search, setSearch] = useState('');
-  const [suggestions, setSuggestions] = useState<AdminProduct[]>([]);
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [allProducts, setAllProducts] = useState<AdminProduct[]>([]);
-
-  // Estados de Micro-interação 3D (Tilt) & Parallax com Throttling para 0ms INP
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
-  const rafRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
-    setAllProducts(getStoredProducts());
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, []);
-
-  // Filtragem de autocomplete da busca em tempo real
-  useEffect(() => {
-    if (search.trim().length >= 2) {
-      const term = search.toLowerCase();
-      const matches = allProducts
-        .filter(
-          (p) =>
-            p.name.toLowerCase().includes(term) ||
-            p.category.toLowerCase().includes(term)
-        )
-        .slice(0, 4);
-      setSuggestions(matches);
-    } else {
-      setSuggestions([]);
-    }
-  }, [search, allProducts]);
-
-  // Listener de mouse suave throttled com requestAnimationFrame (Garante 60/120fps sem bloquear thread principal)
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isTouchDevice || !heroRef.current) return;
-    if (rafRef.current !== null) return;
-
-    const clientX = e.clientX;
-    const clientY = e.clientY;
-
-    rafRef.current = requestAnimationFrame(() => {
-      rafRef.current = null;
-      if (!heroRef.current) return;
-      const rect = heroRef.current.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-
-      const rotateX = ((clientY - centerY) / (rect.height / 2)) * -4;
-      const rotateY = ((clientX - centerX) / (rect.width / 2)) * 4;
-
-      setTilt({
-        x: Math.max(-4, Math.min(4, rotateX)),
-        y: Math.max(-4, Math.min(4, rotateY)),
-      });
-    });
-  };
-
-  const handleMouseLeave = () => {
-    if (rafRef.current) {
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-    }
-    setTilt({ x: 0, y: 0 });
-  };
-
-  const handleSearchSubmit = (e: React.FormEvent) => {
+  const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (search.trim()) {
-      router.push('/categorias?busca=' + encodeURIComponent(search.trim()));
-      setIsSearchFocused(false);
+    if (searchQuery.trim()) {
+      router.push(`/categorias?busca=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  const handleToggle = (audience: 'pet' | 'agro') => {
+    if (onAudienceChange) {
+      onAudienceChange(audience);
     }
   };
 
   return (
-    <section
-      ref={heroRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="relative w-full overflow-hidden bg-[#FFFDF8] min-h-[580px] sm:min-h-[640px] lg:min-h-[700px] flex items-end pt-8 lg:pt-14 border-b border-[#8B5F3A]/10"
-      style={{
-        perspective: '1200px',
-      }}
-    >
-      {/* CAMADA 1: FUNDO FIXO COM RADIAL SUTIL */}
-      <div
-        className="absolute inset-0 pointer-events-none z-0"
-        style={{
-          background:
-            'radial-gradient(ellipse 70% 60% at 75% 45%, rgba(28, 78, 71, 0.07) 0%, rgba(139, 95, 58, 0.05) 45%, rgba(255, 253, 248, 0.95) 100%)',
-        }}
-      />
+    <section className="relative min-h-[90vh] lg:min-h-[92vh] flex items-center justify-center overflow-hidden bg-black text-white">
+      {/* 1. Background com efeito Ken Burns cinematográfico & Fallback para Pitbull Oficial */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="relative w-full h-full animate-kenburns">
+          <Image
+            src="/images/hero-pitbull-tight.png"
+            alt="Mascote Pitbull AgroPet Pr1me"
+            fill
+            priority
+            className="object-cover object-center opacity-85 scale-105"
+            sizes="100vw"
+          />
+        </div>
 
-      {/* CAMADA 2: ELEMENTO MÉDIO DE PROFUNDIDADE (Halo translúcido orgânico) */}
-      <div
-        className="absolute right-[5%] lg:right-[15%] top-1/4 w-[380px] sm:w-[480px] h-[380px] sm:h-[480px] rounded-full bg-gradient-to-tr from-[#1C4E47]/10 to-[#D8E934]/15 blur-3xl pointer-events-none z-0 transition-transform duration-700 ease-out"
-        style={{
-          transform: `translate3d(${tilt.y * -4}px, ${tilt.x * -4}px, 0)`,
-        }}
-      />
+        {/* Overlay escuro/petróleo de alto contraste (estilo Voldog) */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/65 to-black/45" />
+        <div className="absolute inset-0 bg-radial from-transparent via-black/40 to-black/80" />
+      </div>
 
-      {/* CONTAINER PRINCIPAL DA CENA */}
-      <div className="relative max-w-[1360px] w-full mx-auto px-4 sm:px-6 lg:px-8 z-10 flex-1 flex items-end">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-end w-full">
+      {/* 2. Conteúdo Central Sobreposto */}
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-20 lg:py-24 text-center flex flex-col items-center">
+        {/* Badges de Confiança em Linha */}
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-6 animate-[fadeSlideUp_0.4s_ease-out_forwards]">
+          <span className="inline-flex items-center gap-1.5 bg-black/60 border border-white/20 text-[#51FFE6] text-[11px] font-bold px-3 py-1 rounded-full backdrop-blur-md">
+            <ShieldCheck className="w-3.5 h-3.5 text-[#20BEE2]" />
+            <span>100% Originais</span>
+          </span>
+          <span className="inline-flex items-center gap-1.5 bg-black/60 border border-white/20 text-white text-[11px] font-bold px-3 py-1 rounded-full backdrop-blur-md">
+            <Stethoscope className="w-3.5 h-3.5 text-[#20BEE2]" />
+            <span>Apoio Vet</span>
+          </span>
+          <span className="inline-flex items-center gap-1.5 bg-black/60 border border-white/20 text-white text-[11px] font-bold px-3 py-1 rounded-full backdrop-blur-md">
+            <Truck className="w-3.5 h-3.5 text-[#51FFE6]" />
+            <span>Entrega Expressa Sorocaba</span>
+          </span>
+        </div>
 
-          {/* COLUNA ESQUERDA: TEXTO, BUSCA INTELIGENTE E PROPOSTA DE VALOR */}
-          <div className="lg:col-span-6 flex flex-col justify-center items-start z-20 pb-10 sm:pb-14 lg:pb-16 max-w-xl animate-[fadeSlideUp_0.6s_ease-out_forwards]">
-            {/* Eyebrow Pill com selo de autoridade */}
-            <div className="inline-flex items-center gap-2 bg-[#1C4E47]/10 text-[#1C4E47] text-xs font-semibold px-3.5 py-1.5 rounded-full mb-4 border border-[#1C4E47]/20 shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
-              <span>Nutrição &amp; Farmácia Veterinária Especializada</span>
-            </div>
+        {/* Headline Principal de Autoridade */}
+        <h1 className="font-['Archivo_Black',sans-serif] text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.08] max-w-4xl uppercase mb-6 animate-[fadeSlideUp_0.6s_ease-out_forwards]">
+          O Melhor Cuidado para seu Pet e sua Propriedade com a <span className="text-[#20BEE2]">Nutrição Ideal</span>
+        </h1>
 
-            {/* Headline com tipografia serifada editorial e destaque limpo */}
-            <h1 className="text-3xl sm:text-4xl lg:text-[52px] font-serif font-bold text-[#20241F] tracking-tight leading-[1.12] mb-4">
-              O Melhor Cuidado <br />
-              para seu Pet com a{' '}
-              <span className="text-[#1C4E47] underline decoration-[#D8E934] decoration-4 underline-offset-6">
-                Nutrição Ideal
-              </span>
-            </h1>
+        {/* Subtítulo Acolhedor */}
+        <p className="text-sm sm:text-base md:text-lg text-gray-200 max-w-2xl mx-auto leading-relaxed mb-8 font-medium animate-[fadeSlideUp_0.7s_ease-out_forwards]">
+          Rações super premium selecionadas, farmácia veterinária especializada e artigos para o campo. Atendimento amigo de loja de bairro, com entrega rápida para Sorocaba e região.
+        </p>
 
-            {/* Sub-headline com tom amigável e regional */}
-            <p className="text-sm sm:text-base text-[#20241F]/80 max-w-lg mb-8 leading-relaxed font-normal">
-              Rações super premium selecionadas, farmácia veterinária especializada e artigos para o campo. Atendimento amigo de loja de bairro, com entrega rápida para Sorocaba e região.
-            </p>
-
-            {/* Campo de Busca Inteligente com Autocomplete em Tempo Real */}
-            <div className="relative w-full max-w-md mb-8 z-30">
-              <form
-                onSubmit={handleSearchSubmit}
-                className="w-full bg-white rounded-full p-1.5 sm:p-2 flex items-center shadow-lg border border-[#8B5F3A]/20 focus-within:border-[#12c0e0] focus-within:ring-2 focus-within:ring-[#12c0e0]/20 transition-all"
-              >
-                <div className="flex items-center pl-3 sm:pl-4 text-gray-400">
-                  <Search className="w-4 h-4 sm:w-5 sm:h-5 text-[#12c0e0]" />
-                </div>
-                <input
-                  type="text"
-                  value={search}
-                  onFocus={() => setIsSearchFocused(true)}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Qual ração ou medicamento seu pet precisa?"
-                  className="w-full bg-transparent px-3 text-xs sm:text-sm text-[#20241F] placeholder:text-gray-400 outline-hidden font-medium"
-                />
-                <button
-                  type="submit"
-                  className="bg-[#20241F] hover:bg-[#3591A1] text-white text-xs sm:text-sm font-extrabold px-6 sm:px-8 py-3 rounded-full transition-all shrink-0 shadow-md hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  Buscar
-                </button>
-              </form>
-
-              {/* Dropdown de Sugestões de Autocomplete em Tempo Real */}
-              {isSearchFocused && suggestions.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50 p-2 space-y-1">
-                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-3 py-1 block">
-                    Produtos Sugeridos:
-                  </span>
-                  {suggestions.map((item) => (
-                    <Link
-                      key={item.id}
-                      href={`/categorias?busca=${encodeURIComponent(item.name)}`}
-                      onClick={() => setIsSearchFocused(false)}
-                      className="flex items-center justify-between p-2.5 rounded-xl hover:bg-gray-50 transition-colors group"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="relative w-9 h-9 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-200">
-                          <Image src={item.image} alt={item.name} fill className="object-cover" />
-                        </div>
-                        <div>
-                          <p className="text-xs font-bold text-[#20241F] line-clamp-1 group-hover:text-[#00829B]">
-                            {item.name}
-                          </p>
-                          <span className="text-[10px] font-semibold text-gray-400">
-                            {item.category}
-                          </span>
-                        </div>
-                      </div>
-                      <span className="text-xs font-black text-[#20241F] whitespace-nowrap ml-2">
-                        R$ {item.price.toFixed(2)}
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* 3 Badges de Confiança com Ícones Lucide Confiáveis (Sem Material Symbols) */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 w-full max-w-md text-xs font-bold text-[#20241F]">
-              <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 py-2.5 rounded-xl border border-[#8B5F3A]/15 shadow-xs transition-transform hover:scale-[1.02]">
-                <ShieldCheck className="w-4 h-4 text-[#10b981] shrink-0" />
-                <span>100% Originais</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 py-2.5 rounded-xl border border-[#8B5F3A]/15 shadow-xs transition-transform hover:scale-[1.02]">
-                <Stethoscope className="w-4 h-4 text-[#00829B] shrink-0" />
-                <span>Apoio Vet</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 py-2.5 rounded-xl border border-[#8B5F3A]/15 shadow-xs transition-transform hover:scale-[1.02]">
-                <Zap className="w-4 h-4 text-[#E06F12] shrink-0" />
-                <span>Entrega Expressa</span>
-              </div>
-            </div>
-          </div>
-
-          {/* COLUNA DIREITA: CENA 3D DO PITBULL COM ANCORAGEM, PROFUNDIDADE E EFEITO TILT */}
-          <div className="lg:col-span-6 relative flex items-end justify-center w-full h-[400px] sm:h-[500px] lg:h-[640px] xl:h-[700px] z-10 overflow-visible">
-            
-            {/* CONTAINER COM EFEITO TILT 3D NO MOUSE */}
+        {/* 3. TOGGLE SWITCH ESTILIZADO (Pílula Deslizante: Tutor de Pet vs Campo/Agro) */}
+        <div className="mb-8 w-full max-w-md animate-[fadeSlideUp_0.8s_ease-out_forwards]">
+          <div className="bg-neutral-900/90 border border-white/20 p-1.5 rounded-full flex items-center shadow-2xl backdrop-blur-md relative">
+            {/* Indicador deslizante animado */}
             <div
-              className="relative w-full h-full max-w-[520px] sm:max-w-[600px] lg:max-w-[680px] flex items-end justify-center transition-transform duration-200 ease-out"
-              style={{
-                transform: !isTouchDevice
-                  ? `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`
-                  : 'none',
-                transformStyle: 'preserve-3d',
-              }}
+              className={`absolute top-1.5 bottom-1.5 rounded-full bg-[#20BEE2] transition-all duration-300 ease-out shadow-md ${
+                activeAudience === 'pet' ? 'left-1.5 w-[calc(50%-6px)]' : 'left-[calc(50%+3px)] w-[calc(50%-6px)]'
+              }`}
+            />
+
+            <button
+              type="button"
+              onClick={() => handleToggle('pet')}
+              className={`relative z-10 w-1/2 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-black transition-colors duration-200 flex items-center justify-center gap-2 ${
+                activeAudience === 'pet' ? 'text-black font-extrabold' : 'text-gray-300 hover:text-white'
+              }`}
             >
-              {/* Sombra de Contato Realista sob as patas no chão */}
-              <div className="absolute bottom-0 w-64 sm:w-80 lg:w-96 h-8 bg-black/20 blur-xl rounded-[100%] mx-auto z-10 pointer-events-none" />
-              <div className="absolute bottom-1 w-48 sm:w-60 lg:w-72 h-4 bg-black/35 blur-md rounded-[100%] mx-auto z-10 pointer-events-none" />
+              <span>🐾</span>
+              <span>Tutor de Pet</span>
+            </button>
 
-              {/* Imagem do Pitbull Monumental com base ancorada e sangria superior */}
-              <div className="relative w-full h-full flex items-end justify-center z-20 animate-[heroZoomIn_0.7s_ease-out_0.2s_forwards]">
-                <Image
-                  src="/images/hero-pitbull-tight.png"
-                  alt="Pitbull AgroPet Prime - O melhor amigo do seu pet e da sua fazenda"
-                  priority
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 680px"
-                  className="object-contain object-bottom drop-shadow-2xl select-none pointer-events-none"
-                />
-              </div>
-
-              {/* BADGES FLUTUANTES COM PARALLAX INVERSO (Sensação de profundidade tridimensional) */}
-              
-              {/* Badge 1: Qualidade Comprovada (Superior Esquerdo) */}
-              <div
-                className="hidden sm:flex absolute top-12 lg:top-20 -left-4 lg:-left-6 z-30 bg-white/95 backdrop-blur-md px-3.5 py-2.5 rounded-2xl shadow-xl border border-white/80 items-center gap-2.5 transition-transform duration-200 ease-out animate-[fadeSlideUp_0.6s_ease-out_0.35s_forwards]"
-                style={{
-                  transform: !isTouchDevice
-                    ? `translate3d(${tilt.y * -2.5}px, ${tilt.x * -2.5}px, 20px)`
-                    : 'none',
-                }}
-              >
-                <div className="w-8 h-8 rounded-xl bg-[#12c0e0]/15 text-[#00829B] flex items-center justify-center font-bold">
-                  <CheckCircle2 className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold text-gray-400 block uppercase tracking-wider leading-none">
-                    Garantia Total
-                  </span>
-                  <span className="text-xs font-black text-[#20241F]">
-                    Alimentos 100% Originais
-                  </span>
-                </div>
-              </div>
-
-              {/* Badge 2: Entrega Rápida & Pronta Entrega (Meio Direito) */}
-              <div
-                className="hidden sm:flex absolute bottom-28 lg:bottom-36 -right-2 lg:-right-4 z-30 bg-white/95 backdrop-blur-md px-3.5 py-2.5 rounded-2xl shadow-xl border border-white/80 items-center gap-2.5 transition-transform duration-200 ease-out animate-[fadeSlideUp_0.6s_ease-out_0.45s_forwards]"
-                style={{
-                  transform: !isTouchDevice
-                    ? `translate3d(${tilt.y * -3}px, ${tilt.x * -3}px, 30px)`
-                    : 'none',
-                }}
-              >
-                <div className="w-8 h-8 rounded-xl bg-[#E06F12]/15 text-[#E06F12] flex items-center justify-center font-bold">
-                  <Package className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold text-gray-400 block uppercase tracking-wider leading-none">
-                    Atendimento Sorocaba
-                  </span>
-                  <span className="text-xs font-black text-[#20241F]">
-                    Pronta Entrega no Dia
-                  </span>
-                </div>
-              </div>
-
-            </div>
+            <button
+              type="button"
+              onClick={() => handleToggle('agro')}
+              className={`relative z-10 w-1/2 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-black transition-colors duration-200 flex items-center justify-center gap-2 ${
+                activeAudience === 'agro' ? 'text-black font-extrabold' : 'text-gray-300 hover:text-white'
+              }`}
+            >
+              <span>🌾</span>
+              <span>Campo / Agro</span>
+            </button>
           </div>
+          <span className="text-[11px] text-gray-400 font-semibold mt-2 block">
+            {activeAudience === 'pet'
+              ? 'Exibindo nutrição para Cães, Gatos e Pássaros'
+              : 'Exibindo rações para Cavalos, Haras e Chácaras'}
+          </span>
+        </div>
 
+        {/* 4. Campo de Busca Pílula Sobreposto ao Vídeo */}
+        <form
+          onSubmit={handleSearch}
+          className="w-full max-w-xl bg-white/95 backdrop-blur-md rounded-full p-2 pl-6 flex items-center shadow-2xl border border-white/40 mb-6 transition-all focus-within:ring-4 focus-within:ring-[#20BEE2]/30 animate-[fadeSlideUp_0.9s_ease-out_forwards]"
+        >
+          <Search className="w-5 h-5 text-gray-500 mr-3 shrink-0" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={
+              activeAudience === 'pet'
+                ? 'Buscar Premier, Royal Canin, Simparic, caminhas...'
+                : 'Buscar ração de cavalo, sal mineral, selaria...'
+            }
+            className="w-full bg-transparent text-black text-xs sm:text-sm placeholder:text-gray-500 outline-none font-medium"
+          />
+          <button
+            type="submit"
+            className="bg-[#000000] hover:bg-[#20BEE2] text-white hover:text-black text-xs sm:text-sm font-extrabold px-6 py-3 rounded-full transition-all shrink-0 ml-2"
+          >
+            Buscar
+          </button>
+        </form>
+
+        {/* 5. CTAs de Ação Rápida */}
+        <div className="flex flex-wrap items-center justify-center gap-4 animate-[fadeSlideUp_1s_ease-out_forwards]">
+          <a
+            href="#produtos"
+            className="inline-flex items-center gap-2 bg-[#20BEE2] hover:bg-[#51FFE6] text-black font-black text-xs sm:text-sm px-7 py-3.5 rounded-full shadow-lg transition-all hover:scale-105 active:scale-95"
+          >
+            <span>Ver Produtos em Destaque</span>
+            <ArrowRight className="w-4 h-4" />
+          </a>
+          <a
+            href="https://wa.me/5515996580804"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-black/80 hover:bg-black text-white border border-white/30 font-bold text-xs sm:text-sm px-6 py-3.5 rounded-full backdrop-blur-md transition-all hover:border-[#20BEE2]"
+          >
+            <MessageCircle className="w-4 h-4 text-[#20BEE2]" />
+            <span>Pedir no WhatsApp</span>
+          </a>
         </div>
       </div>
     </section>

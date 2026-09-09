@@ -15,7 +15,6 @@ import {
   MapPin,
   ShieldCheck,
   ChevronDown,
-  Sparkles,
   Phone,
 } from 'lucide-react';
 import { getStoredProducts, AdminProduct } from '@/lib/admin-store';
@@ -30,7 +29,7 @@ export function Header() {
   const { totalItems, totalPrice } = useCart();
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeJourney, setActiveJourney] = useState<'all' | 'pet' | 'agro'>('all');
+  const [scrolled, setScrolled] = useState(false);
 
   // Autocomplete
   const [suggestions, setSuggestions] = useState<AdminProduct[]>([]);
@@ -39,10 +38,11 @@ export function Header() {
 
   useEffect(() => {
     setAllProducts(getStoredProducts());
-    const saved = sessionStorage.getItem('agropet_user_journey') as any;
-    if (saved) {
-      setActiveJourney(saved);
-    }
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
@@ -61,19 +61,12 @@ export function Header() {
     }
   }, [searchQuery, allProducts]);
 
-  const handleSelectJourney = (journey: 'all' | 'pet' | 'agro') => {
-    setActiveJourney(journey);
-    sessionStorage.setItem('agropet_user_journey', journey);
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('user-journey-change', { detail: journey }));
-    }
-  };
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(`/categorias?busca=${encodeURIComponent(searchQuery.trim())}`);
       setIsFocused(false);
+      setMobileMenuOpen(false);
     }
   };
 
@@ -84,73 +77,70 @@ export function Header() {
     { label: 'Cavalos & Agro', href: '/categorias/agro' },
     { label: 'Farmácia & Saúde', href: '/categorias/farmacia' },
     { label: 'Acessórios & Conforto', href: '/categorias/conforto' },
-    { label: 'Ofertas da Loja', href: '#destaques' },
   ];
 
-  return (
-    <header className="sticky top-0 left-0 right-0 z-50 bg-[#FFFDF8]/95 backdrop-blur-xl shadow-xs border-b border-[#8B5F3A]/10">
-      
-      {/* 1. Barra Superior de Confiança & Localização com Lucide Icons */}
-      <div className="bg-[#20241F] text-white text-[11px] font-semibold">
-        <div className="max-w-[1360px] mx-auto px-4 sm:px-6 h-9 flex items-center justify-between">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <span className="flex items-center gap-1.5 text-gray-200">
-              <Truck className="w-3.5 h-3.5 text-[#12c0e0]" />
-              <span>Entregas rápidas em Sorocaba e região</span>
-            </span>
-            <span className="hidden md:inline text-gray-500">•</span>
-            <a
-              href="https://wa.me/5515996580804"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden md:flex items-center gap-1.5 text-gray-200 hover:text-[#10b981] transition-colors"
-            >
-              <MessageCircle className="w-3.5 h-3.5 text-[#10b981]" />
-              <span>WhatsApp: (15) 9 9658-0804</span>
-            </a>
-          </div>
+  const marqueeText =
+    "Entregas rápidas em Sorocaba e região • WhatsApp: (15) 9 9658-0804 • R. Antônio Silva Saladino, 878 - Pq. Vitória Régia • Loja Oficial Prime • ";
 
-          <div className="flex items-center gap-4 sm:gap-6">
-            <span className="hidden lg:flex items-center gap-1.5 text-gray-300">
-              <MapPin className="w-3.5 h-3.5 text-[#12c0e0]" />
-              <span>R. Antônio Silva Saladino, 878 - Pq. Vitória Régia</span>
-            </span>
-            <span className="flex items-center gap-1.5 text-gray-200">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#E06F12]" />
-              <span>Loja Oficial Prime</span>
-            </span>
-          </div>
+  return (
+    <header
+      className={`sticky top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? 'bg-black/95 backdrop-blur-xl shadow-lg border-b border-white/10'
+          : 'bg-black border-b border-neutral-900'
+      }`}
+    >
+      {/* 1. Barra Superior com Marquee Infinito (Ticker Fino) */}
+      <div className="bg-[#20BEE2] text-black text-[11px] font-extrabold tracking-wider overflow-hidden py-1.5 select-none">
+        <div className="animate-marquee whitespace-nowrap flex items-center">
+          <span className="mx-4">{marqueeText}</span>
+          <span className="mx-4">{marqueeText}</span>
+          <span className="mx-4">{marqueeText}</span>
+          <span className="mx-4">{marqueeText}</span>
         </div>
       </div>
 
       {/* 2. Barra de Navegação Principal */}
-      <div className="max-w-[1360px] mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-4 sm:gap-8">
+      <div className="max-w-[1380px] mx-auto px-4 sm:px-6 h-18 sm:h-20 flex items-center justify-between gap-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 shrink-0 group">
-          <div className="relative w-9 h-9 sm:w-11 sm:h-11 rounded-2xl overflow-hidden bg-white shadow-xs p-1 border border-[#8B5F3A]/15 group-hover:scale-105 transition-transform">
+          <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-2xl overflow-hidden bg-white/10 p-1 border border-white/15 group-hover:scale-105 transition-transform flex items-center justify-center">
             <Image
               src="/images/logo.png"
-              alt="AgroPet Prime"
+              alt="AgroPet Pr1me"
               fill
-              className="object-contain p-0.5"
+              className="object-contain p-1"
               priority
             />
           </div>
           <div>
-            <span className="font-serif font-black text-xl sm:text-2xl tracking-tight text-[#20241F] block leading-none">
-              AgroPet<span className="text-[#12c0e0]">Prime</span>
+            <span className="font-['Archivo_Black',sans-serif] text-xl sm:text-2xl tracking-tight text-white block leading-none">
+              AGROPET <span className="text-[#20BEE2]">PR<span className="text-[#51FFE6]">1</span>ME</span>
             </span>
-            <span className="text-[10px] font-bold text-gray-500 tracking-wider block mt-0.5">
-              Pet Shop &amp; Campo Acolhedor
+            <span className="text-[10px] font-bold text-gray-400 tracking-widest uppercase block mt-1">
+              Pet Shop &amp; Campo • Sorocaba
             </span>
           </div>
         </Link>
 
-        {/* Campo de Busca com Autocomplete */}
-        <div className="relative flex-1 max-w-xl hidden md:block">
+        {/* Links de navegação desktop */}
+        <nav className="hidden xl:flex items-center gap-6 text-xs font-bold text-white/90">
+          {navDepartments.map((dept, idx) => (
+            <Link
+              key={idx}
+              href={dept.href}
+              className="hover:text-[#20BEE2] transition-colors whitespace-nowrap"
+            >
+              {dept.label}
+            </Link>
+          ))}
+        </nav>
+
+        {/* Campo de Busca com Autocomplete (Desktop & Tablet) */}
+        <div className="relative flex-1 max-w-xs lg:max-w-sm hidden md:block">
           <form
             onSubmit={handleSearch}
-            className="w-full bg-white rounded-full px-4 py-2 flex items-center border border-[#8B5F3A]/20 shadow-2xs focus-within:border-[#12c0e0] focus-within:ring-2 focus-within:ring-[#12c0e0]/20 transition-all"
+            className="w-full bg-neutral-900 rounded-full px-4 py-2 flex items-center border border-neutral-700 focus-within:border-[#20BEE2] focus-within:ring-2 focus-within:ring-[#20BEE2]/20 transition-all"
           >
             <Search className="w-4 h-4 text-gray-400 mr-2 shrink-0" />
             <input
@@ -158,20 +148,14 @@ export function Header() {
               value={searchQuery}
               onFocus={() => setIsFocused(true)}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar rações, medicamentos, antipulgas ou campo..."
-              className="w-full bg-transparent text-xs sm:text-sm text-[#20241F] placeholder:text-gray-400 outline-hidden font-medium"
+              placeholder="Buscar ração, remédio ou campo..."
+              className="w-full bg-transparent text-xs text-white placeholder:text-gray-400 outline-none font-medium"
             />
-            <button
-              type="submit"
-              className="bg-[#20241F] hover:bg-[#3591A1] text-white text-xs font-bold px-4 py-1.5 rounded-full transition-all shrink-0 ml-2"
-            >
-              Buscar
-            </button>
           </form>
 
           {/* Autocomplete Popup */}
           {isFocused && suggestions.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 p-2 z-50 space-y-1">
+            <div className="absolute top-full left-0 right-0 mt-2 bg-neutral-900 rounded-2xl shadow-2xl border border-neutral-700 p-2 z-50 space-y-1">
               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-3 py-1 block">
                 Sugestões Rápidas:
               </span>
@@ -180,75 +164,75 @@ export function Header() {
                   key={p.id}
                   href={`/categorias?busca=${encodeURIComponent(p.name)}`}
                   onClick={() => setIsFocused(false)}
-                  className="flex items-center justify-between p-2 rounded-xl hover:bg-gray-50 transition-colors"
+                  className="flex items-center justify-between p-2 rounded-xl hover:bg-neutral-800 transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="relative w-8 h-8 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-200">
+                    <div className="relative w-8 h-8 rounded-lg overflow-hidden bg-neutral-800 shrink-0 border border-neutral-700">
                       <Image src={p.image} alt={p.name} fill className="object-cover" />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-[#20241F] line-clamp-1">{p.name}</p>
+                      <p className="text-xs font-bold text-white line-clamp-1">{p.name}</p>
                       <span className="text-[10px] text-gray-400">{p.category}</span>
                     </div>
                   </div>
-                  <span className="text-xs font-black text-[#20241F]">R$ {p.price.toFixed(2)}</span>
+                  <span className="text-xs font-black text-[#20BEE2]">R$ {p.price.toFixed(2)}</span>
                 </Link>
               ))}
             </div>
           )}
         </div>
 
-        {/* Ações: WhatsApp & Carrinho */}
+        {/* Ações: Pedir no WhatsApp & Carrinho */}
         <div className="flex items-center gap-3 shrink-0">
           <a
             href="https://wa.me/5515996580804"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden xl:flex items-center gap-2 bg-[#25D366]/15 hover:bg-[#25D366]/25 text-[#1b8743] px-3.5 py-2 rounded-xl text-xs font-extrabold border border-[#25D366]/30 transition-all"
+            className="hidden sm:inline-flex items-center gap-2 bg-[#20BEE2] hover:bg-[#51FFE6] text-black px-4 py-2.5 rounded-full text-xs font-extrabold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
-            <MessageCircle className="w-4 h-4 fill-[#25D366] text-[#25D366]" />
+            <MessageCircle className="w-4 h-4 fill-black" />
             <span>Pedir no WhatsApp</span>
           </a>
 
           <Link
             href="/carrinho"
-            className="relative flex items-center gap-2.5 bg-white hover:bg-gray-50 text-[#20241F] px-3.5 sm:px-4 py-2 rounded-2xl border border-[#8B5F3A]/20 shadow-xs transition-all hover:scale-[1.02] active:scale-[0.98]"
+            className="relative flex items-center gap-2.5 bg-neutral-900 hover:bg-neutral-800 text-white px-3.5 sm:px-4 py-2.5 rounded-full border border-neutral-700 transition-all"
           >
             <div className="relative">
-              <ShoppingCart className="w-5 h-5 text-[#00829B]" />
+              <ShoppingCart className="w-5 h-5 text-[#20BEE2]" />
               {totalItems > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#E06F12] text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white">
+                <span className="absolute -top-2 -right-2 bg-[#51FFE6] text-black text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-black">
                   {totalItems}
                 </span>
               )}
             </div>
-            <div className="hidden sm:flex flex-col text-left">
-              <span className="text-[10px] font-bold text-gray-400 leading-none">Seu Carrinho</span>
-              <span className="text-xs font-black text-[#20241F]">
+            <div className="hidden md:flex flex-col text-left">
+              <span className="text-[9px] font-bold text-gray-400 uppercase leading-none">Carrinho</span>
+              <span className="text-xs font-black text-white">
                 R$ {totalPrice.toFixed(2)}
               </span>
             </div>
           </Link>
 
-          {/* Menu Mobile Hamburger com transformação animada de linhas em X */}
+          {/* Menu Mobile Hamburger */}
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? 'Fechar menu' : 'Abrir menu'}
-            className="md:hidden relative w-10 h-10 flex flex-col items-center justify-center rounded-xl bg-white border border-[#8B5F3A]/20 text-[#20241F] hover:bg-gray-50 transition-all"
+            className="xl:hidden relative w-10 h-10 flex flex-col items-center justify-center rounded-xl bg-neutral-900 border border-neutral-700 text-white hover:bg-neutral-800 transition-all"
           >
             <span
-              className={`w-5 h-0.5 bg-[#20241F] rounded-full transition-all duration-300 ${
+              className={`w-5 h-0.5 bg-white rounded-full transition-all duration-300 ${
                 mobileMenuOpen ? 'rotate-45 translate-y-1.5' : 'mb-1'
               }`}
             />
             <span
-              className={`w-5 h-0.5 bg-[#20241F] rounded-full transition-all duration-300 ${
+              className={`w-5 h-0.5 bg-white rounded-full transition-all duration-300 ${
                 mobileMenuOpen ? 'opacity-0' : 'mb-1'
               }`}
             />
             <span
-              className={`w-5 h-0.5 bg-[#20241F] rounded-full transition-all duration-300 ${
+              className={`w-5 h-0.5 bg-white rounded-full transition-all duration-300 ${
                 mobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''
               }`}
             />
@@ -256,68 +240,16 @@ export function Header() {
         </div>
       </div>
 
-      {/* 3. SELETOR DAS DUAS JORNADAS DO PÚBLICO (Tutor de Pet vs Produtor Rural / Campo) */}
-      <div className="bg-[#FAF7F2] border-t border-[#8B5F3A]/10 px-4 py-2">
-        <div className="max-w-[1360px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
-          <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
-            <span className="text-[11px] font-bold text-gray-500 shrink-0 hidden md:inline">
-              Qual é o seu foco hoje?
-            </span>
-            <button
-              onClick={() => handleSelectJourney('pet')}
-              className={`px-3 py-1.5 rounded-full font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
-                activeJourney === 'pet'
-                  ? 'bg-[#1C4E47] text-white shadow-xs'
-                  : 'bg-white text-gray-700 border border-[#8B5F3A]/15 hover:border-[#1C4E47]'
-              }`}
-            >
-              <span>🐾 Sou tutor de pet (Cães &amp; Gatos)</span>
-            </button>
-            <button
-              onClick={() => handleSelectJourney('agro')}
-              className={`px-3 py-1.5 rounded-full font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
-                activeJourney === 'agro'
-                  ? 'bg-[#1C4E47] text-white shadow-xs'
-                  : 'bg-white text-gray-700 border border-[#8B5F3A]/15 hover:border-[#1C4E47]'
-              }`}
-            >
-              <span>🌾 Trabalho com campo/agro (Cavalos &amp; Haras)</span>
-            </button>
-            {activeJourney !== 'all' && (
-              <button
-                onClick={() => handleSelectJourney('all')}
-                className="text-[10px] font-bold text-gray-400 hover:text-gray-700 underline ml-1 shrink-0"
-              >
-                Ver tudo
-              </button>
-            )}
-          </div>
-
-          {/* Links de navegação tradicionais */}
-          <nav className="hidden lg:flex items-center gap-4 text-xs font-bold text-[#20241F]/80">
-            {navDepartments.map((dept, idx) => (
-              <Link
-                key={idx}
-                href={dept.href}
-                className="hover:text-[#1C4E47] transition-colors whitespace-nowrap"
-              >
-                {dept.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </div>
-
-      {/* Menu Mobile Drawer Acolhedor com Backdrop Blur */}
+      {/* Menu Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#FFFDF8]/98 backdrop-blur-2xl border-t border-[#8B5F3A]/15 p-5 space-y-4 shadow-xl animate-[fadeSlideUp_0.3s_ease-out_forwards]">
+        <div className="xl:hidden bg-neutral-950 border-t border-neutral-800 p-5 space-y-4 shadow-2xl animate-[fadeSlideUp_0.2s_ease-out_forwards]">
           <form onSubmit={handleSearch} className="relative">
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar rações, medicamentos, antipulgas..."
-              className="w-full px-4 py-3 bg-white border border-[#8B5F3A]/20 rounded-2xl text-xs text-[#20241F] placeholder:text-gray-400 focus:outline-hidden focus:border-[#12c0e0]"
+              placeholder="Buscar ração, medicamentos..."
+              className="w-full px-4 py-3 bg-neutral-900 border border-neutral-700 rounded-xl text-xs text-white placeholder:text-gray-400 focus:outline-none focus:border-[#20BEE2]"
             />
           </form>
           <div className="space-y-1">
@@ -329,23 +261,23 @@ export function Header() {
                 key={idx}
                 href={dept.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-between py-2.5 px-3 rounded-xl text-xs font-bold text-[#20241F] hover:bg-[#1C4E47]/5 hover:text-[#1C4E47] transition-all"
+                className="flex items-center justify-between py-2.5 px-3 rounded-xl text-xs font-bold text-white hover:bg-neutral-900 hover:text-[#20BEE2] transition-all"
               >
                 <span>{dept.label}</span>
-                <span className="text-gray-400">→</span>
+                <span className="text-gray-500">→</span>
               </Link>
             ))}
           </div>
 
-          <div className="pt-3 border-t border-[#8B5F3A]/10 flex flex-col gap-2">
+          <div className="pt-3 border-t border-neutral-800 flex flex-col gap-2">
             <a
               href="https://wa.me/5515996580804"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 bg-[#25D366] text-white py-3 rounded-xl text-xs font-bold shadow-xs hover:bg-[#20b858] transition-all"
+              className="flex items-center justify-center gap-2 bg-[#20BEE2] text-black py-3 rounded-full text-xs font-extrabold shadow-sm hover:bg-[#51FFE6] transition-all"
             >
-              <MessageCircle className="w-4 h-4 fill-white" />
-              <span>Falar com Atendente no WhatsApp</span>
+              <MessageCircle className="w-4 h-4 fill-black" />
+              <span>Pedir no WhatsApp • (15) 9 9658-0804</span>
             </a>
           </div>
         </div>
