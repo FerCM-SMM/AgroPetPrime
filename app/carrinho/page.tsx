@@ -1,94 +1,174 @@
 'use client';
 
 import Link from 'next/link';
-import { Trash2, ShoppingCart, ArrowRight, Phone } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import Image from 'next/image';
+import { Trash2, ShoppingCart, ArrowRight, Phone, ShieldCheck, Truck } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { useCart } from '@/hooks/use-cart';
 
+const FREE_SHIPPING_THRESHOLD = 149.0;
+
 export default function CartPage() {
   const { items, total, updateQuantity, removeItem } = useCart();
+  const remainingForFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - total);
+  const freeShippingProgress = Math.min(100, Math.round((total / FREE_SHIPPING_THRESHOLD) * 100));
 
   if (items.length === 0) {
     return (
       <main className="max-w-4xl mx-auto px-4 py-24 text-center">
-        <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-[#000000] mb-4">Carrinho vazio</h2>
-        <p className="text-gray-600 mb-8">Adicione produtos ao carrinho para comecar sua compra.</p>
-        <Link href="/categorias">
-          <Button className="bg-[#12c0e0] text-black hover:bg-[#0ea5e9]">Ver Catalogo</Button>
+        <div className="w-20 h-20 rounded-full bg-[#FAF7F2] border border-[#8B5F3A]/15 flex items-center justify-center mx-auto mb-6 text-gray-400">
+          <ShoppingCart className="w-10 h-10" />
+        </div>
+        <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#20241F] mb-3">
+          Seu carrinho está vazio
+        </h2>
+        <p className="text-sm text-[#20241F]/70 mb-8 max-w-md mx-auto">
+          Explore nossas rações nobres super premium, petiscos e medicamentos veterinários com entrega rápida em Sorocaba.
+        </p>
+        <Link
+          href="/categorias"
+          className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-bold text-sm bg-[#1C4E47] hover:bg-[#12c0e0] text-white hover:text-[#20241F] transition-all shadow-md hover:scale-[1.02] active:scale-[0.98]"
+        >
+          <span>Ver Catálogo Completo</span>
+          <ArrowRight className="w-4 h-4" />
         </Link>
       </main>
     );
   }
 
   return (
-    <main className="max-w-6xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold text-[#000000] mb-8">Carrinho de Compras</h1>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-4">
+    <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+      <h1 className="text-3xl sm:text-4xl font-serif font-bold text-[#20241F] mb-8">
+        Carrinho de Compras
+      </h1>
+
+      {/* Barra de Progresso de Frete Grátis para Sorocaba & Região */}
+      <div className="bg-[#FAF7F2] border border-[#8B5F3A]/15 rounded-2xl p-4 mb-8">
+        <div className="flex items-center justify-between text-xs font-bold text-[#20241F] mb-2">
+          <span className="flex items-center gap-1.5">
+            <Truck className="w-4 h-4 text-[#1C4E47]" />
+            {remainingForFreeShipping === 0
+              ? 'Parabéns! Você ganhou Frete Grátis em Sorocaba!'
+              : `Faltam ${formatCurrency(remainingForFreeShipping)} para FRETE GRÁTIS`}
+          </span>
+          <span className="text-[#1C4E47]">{freeShippingProgress}%</span>
+        </div>
+        <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
+          <div
+            className="bg-[#1C4E47] h-full transition-all duration-500 rounded-full"
+            style={{ width: `${freeShippingProgress}%` }}
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Lista de Itens do Carrinho */}
+        <div className="lg:col-span-8 space-y-4">
           {items.map((item) => (
-            <Card key={item.product.id} className="p-4 flex items-center gap-4">
-              <div className="w-20 h-20 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden flex items-center justify-center">
+            <div
+              key={item.product.id}
+              className="bg-white p-4 sm:p-5 rounded-2xl border border-[#8B5F3A]/15 shadow-xs flex items-center gap-4 transition-all"
+            >
+              <div className="relative w-20 h-20 bg-[#FAF7F2] rounded-xl flex-shrink-0 overflow-hidden flex items-center justify-center p-2 border border-[#8B5F3A]/10">
                 {item.product.image_urls?.[0] ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={item.product.image_urls[0]} alt={item.product.name} className="object-cover w-full h-full" />
-                ) : null}
+                  <Image
+                    src={item.product.image_urls[0]}
+                    alt={item.product.name}
+                    fill
+                    sizes="80px"
+                    className="object-contain"
+                  />
+                ) : (
+                  <ShoppingCart className="w-6 h-6 text-gray-300" />
+                )}
               </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-[#000000]">{item.product.name}</h3>
-                <p className="text-[#12c0e0] font-bold">{formatCurrency(item.product.price)}</p>
+
+              <div className="flex-1 min-w-0">
+                <h3 className="font-bold text-sm text-[#20241F] line-clamp-2 leading-snug mb-1">
+                  {item.product.name}
+                </h3>
+                <p className="text-xs font-bold text-[#1C4E47]">
+                  {formatCurrency(item.product.price)}
+                </p>
               </div>
-              <div className="flex items-center gap-2">
+
+              {/* Seletor de Quantidade */}
+              <div className="flex items-center gap-1 border border-gray-200 rounded-full p-1 bg-gray-50/50">
                 <button
+                  type="button"
                   onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                  className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-[#12c0e0] hover:text-white transition-colors"
+                  className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-gray-200 text-[#20241F] font-bold text-xs transition-colors"
                 >
                   -
                 </button>
-                <span className="w-8 text-center font-semibold">{item.quantity}</span>
+                <span className="w-7 text-center font-bold text-xs text-[#20241F]">
+                  {item.quantity}
+                </span>
                 <button
+                  type="button"
                   onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                  className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-[#12c0e0] hover:text-white transition-colors"
+                  className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-gray-200 text-[#20241F] font-bold text-xs transition-colors"
                 >
                   +
                 </button>
               </div>
-              <span className="font-bold text-[#000000]">{formatCurrency(item.product.price * item.quantity)}</span>
-              <button onClick={() => removeItem(item.product.id)} className="text-gray-400 hover:text-red-500 transition-colors">
-                <Trash2 className="w-5 h-5" />
+
+              <div className="text-right">
+                <span className="font-bold text-sm text-[#20241F] block">
+                  {formatCurrency(item.product.price * item.quantity)}
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => removeItem(item.product.id)}
+                className="text-gray-400 hover:text-red-500 p-2 rounded-lg transition-colors"
+                title="Remover item"
+              >
+                <Trash2 className="w-4 h-4" />
               </button>
-            </Card>
+            </div>
           ))}
         </div>
 
-        <div className="bg-[#f8fafc] rounded-xl p-6 h-fit">
-          <h2 className="text-xl font-bold text-[#000000] mb-4">Resumo do Pedido</h2>
-          <div className="space-y-3 mb-6">
-            <div className="flex justify-between text-gray-600">
+        {/* Resumo do Pedido */}
+        <div className="lg:col-span-4 bg-[#FAF7F2] rounded-3xl p-6 border border-[#8B5F3A]/15 sticky top-24 shadow-xs">
+          <h2 className="text-xl font-serif font-bold text-[#20241F] mb-5">
+            Resumo do Pedido
+          </h2>
+          <div className="space-y-3 mb-6 text-xs text-[#20241F]/80">
+            <div className="flex justify-between">
               <span>Subtotal</span>
-              <span>{formatCurrency(total)}</span>
+              <span className="font-bold text-sm text-[#20241F]">{formatCurrency(total)}</span>
             </div>
-            <div className="flex justify-between text-gray-600">
-              <span>Frete</span>
-              <span>Calculado no checkout</span>
+            <div className="flex justify-between">
+              <span>Frete Sorocaba</span>
+              <span className="font-semibold text-emerald-700">
+                {remainingForFreeShipping === 0 ? 'Grátis' : 'Calculado no checkout'}
+              </span>
             </div>
-            <div className="border-t border-gray-200 pt-3 flex justify-between text-xl font-bold">
+            <div className="flex justify-between items-center text-emerald-700 bg-emerald-50/80 p-2 rounded-xl border border-emerald-200/60">
+              <span>🎁 Cashback de 5%:</span>
+              <span className="font-bold">+{formatCurrency(total * 0.05)}</span>
+            </div>
+            <div className="border-t border-[#8B5F3A]/15 pt-4 flex justify-between items-baseline text-base font-bold text-[#20241F]">
               <span>Total</span>
-              <span className="text-[#12c0e0]">{formatCurrency(total)}</span>
+              <span className="text-2xl font-black text-[#1C4E47]">{formatCurrency(total)}</span>
             </div>
           </div>
-          <Link href="/checkout">
-            <Button size="lg" className="w-full bg-[#12c0e0] text-black hover:bg-[#0ea5e9] mb-3">
-              <ArrowRight className="w-5 h-5 mr-2" />
-              Finalizar Pedido
-            </Button>
+
+          <Link
+            href="/checkout"
+            className="w-full py-3.5 px-6 rounded-2xl font-bold text-sm bg-[#1C4E47] hover:bg-[#12c0e0] text-white hover:text-[#20241F] flex items-center justify-center gap-2 transition-all shadow-md mb-3 hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <span>Prosseguir para o Checkout</span>
+            <ArrowRight className="w-4 h-4" />
           </Link>
-          <Button variant="outline" className="w-full border-[#12c0e0] text-[#12c0e0] hover:bg-[#12c0e0] hover:text-black">
-            <Phone className="w-5 h-5 mr-2" />
-            Comprar pelo WhatsApp
-          </Button>
+
+          <div className="flex items-center justify-center gap-2 text-[11px] text-gray-500 text-center mt-4">
+            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <span>Compra protegida com atendimento direto</span>
+          </div>
         </div>
       </div>
     </main>

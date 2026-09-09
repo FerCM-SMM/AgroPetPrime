@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
@@ -25,14 +25,17 @@ export function Hero() {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [allProducts, setAllProducts] = useState<AdminProduct[]>([]);
 
-  // Estados de Micro-interação 3D (Tilt) & Parallax
+  // Estados de Micro-interação 3D (Tilt) & Parallax com Throttling para 0ms INP
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Detectar dispositivos touch para desabilitar tilt de mouse
     setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
     setAllProducts(getStoredProducts());
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
   }, []);
 
   // Filtragem de autocomplete da busca em tempo real
@@ -52,24 +55,36 @@ export function Hero() {
     }
   }, [search, allProducts]);
 
-  // Listener de mouse para o efeito Tilt 3D suave
+  // Listener de mouse suave throttled com requestAnimationFrame (Garante 60/120fps sem bloquear thread principal)
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isTouchDevice || !heroRef.current) return;
-    const rect = heroRef.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
+    if (rafRef.current !== null) return;
 
-    // Rotação máxima de 5 graus
-    const rotateX = ((e.clientY - centerY) / (rect.height / 2)) * -5;
-    const rotateY = ((e.clientX - centerX) / (rect.width / 2)) * 5;
+    const clientX = e.clientX;
+    const clientY = e.clientY;
 
-    setTilt({
-      x: Math.max(-5, Math.min(5, rotateX)),
-      y: Math.max(-5, Math.min(5, rotateY)),
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null;
+      if (!heroRef.current) return;
+      const rect = heroRef.current.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      const rotateX = ((clientY - centerY) / (rect.height / 2)) * -4;
+      const rotateY = ((clientX - centerX) / (rect.width / 2)) * 4;
+
+      setTilt({
+        x: Math.max(-4, Math.min(4, rotateX)),
+        y: Math.max(-4, Math.min(4, rotateY)),
+      });
     });
   };
 
   const handleMouseLeave = () => {
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
     setTilt({ x: 0, y: 0 });
   };
 
@@ -91,18 +106,18 @@ export function Hero() {
         perspective: '1200px',
       }}
     >
-      {/* CAMADA 1: FUNDO FIXO COM GRADIENTE SUTIL (Verde-Mata Suave -> Areia Quente) */}
+      {/* CAMADA 1: FUNDO FIXO COM RADIAL SUTIL */}
       <div
         className="absolute inset-0 pointer-events-none z-0"
         style={{
           background:
-            'radial-gradient(ellipse 70% 60% at 75% 45%, rgba(53, 145, 161, 0.08) 0%, rgba(139, 95, 58, 0.06) 45%, rgba(255, 253, 248, 0.95) 100%)',
+            'radial-gradient(ellipse 70% 60% at 75% 45%, rgba(28, 78, 71, 0.07) 0%, rgba(139, 95, 58, 0.05) 45%, rgba(255, 253, 248, 0.95) 100%)',
         }}
       />
 
-      {/* CAMADA 2: ELEMENTO MÉDIO DE PROFUNDIDADE (Halo translúcido orgânico atrás do cachorro) */}
+      {/* CAMADA 2: ELEMENTO MÉDIO DE PROFUNDIDADE (Halo translúcido orgânico) */}
       <div
-        className="absolute right-[5%] lg:right-[15%] top-1/4 w-[380px] sm:w-[480px] h-[380px] sm:h-[480px] rounded-full bg-gradient-to-tr from-[#3591A1]/12 to-[#E06F12]/8 blur-3xl pointer-events-none z-0 transition-transform duration-700 ease-out"
+        className="absolute right-[5%] lg:right-[15%] top-1/4 w-[380px] sm:w-[480px] h-[380px] sm:h-[480px] rounded-full bg-gradient-to-tr from-[#1C4E47]/10 to-[#D8E934]/15 blur-3xl pointer-events-none z-0 transition-transform duration-700 ease-out"
         style={{
           transform: `translate3d(${tilt.y * -4}px, ${tilt.x * -4}px, 0)`,
         }}
@@ -114,17 +129,17 @@ export function Hero() {
 
           {/* COLUNA ESQUERDA: TEXTO, BUSCA INTELIGENTE E PROPOSTA DE VALOR */}
           <div className="lg:col-span-6 flex flex-col justify-center items-start z-20 pb-10 sm:pb-14 lg:pb-16 max-w-xl animate-[fadeSlideUp_0.6s_ease-out_forwards]">
-            {/* Eyebrow Pill com tom acolhedor (sem all-caps gritante) */}
-            <div className="inline-flex items-center gap-2 bg-[#12c0e0]/15 text-[#00687B] text-xs font-semibold px-3.5 py-1.5 rounded-full mb-4 border border-[#12c0e0]/30 shadow-xs">
+            {/* Eyebrow Pill com selo de autoridade */}
+            <div className="inline-flex items-center gap-2 bg-[#1C4E47]/10 text-[#1C4E47] text-xs font-semibold px-3.5 py-1.5 rounded-full mb-4 border border-[#1C4E47]/20 shadow-xs">
               <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
-              <span>Nutrição &amp; cuidado selecionado para seu pet</span>
+              <span>Nutrição &amp; Farmácia Veterinária Especializada</span>
             </div>
 
-            {/* Headline com tipografia serifada acolhedora */}
-            <h1 className="text-3xl sm:text-4xl lg:text-[52px] font-serif font-black text-[#20241F] tracking-tight leading-[1.12] mb-4">
+            {/* Headline com tipografia serifada editorial e destaque limpo */}
+            <h1 className="text-3xl sm:text-4xl lg:text-[52px] font-serif font-bold text-[#20241F] tracking-tight leading-[1.12] mb-4">
               O Melhor Cuidado <br />
               para seu Pet com a{' '}
-              <span className="text-[#00829B] italic underline decoration-[#E06F12]/40 decoration-wavy decoration-2">
+              <span className="text-[#1C4E47] underline decoration-[#D8E934] decoration-4 underline-offset-6">
                 Nutrição Ideal
               </span>
             </h1>
