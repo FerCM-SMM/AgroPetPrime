@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
@@ -208,15 +208,15 @@ export function FeaturedProducts() {
           </p>
         </div>
 
-        {/* FILTRO STICKY: Fixa no topo ao rolar a seção para facilitar a navegação */}
+        {/* FILTRO STICKY: Fixa no topo ao rolar a seção para navegação instantânea */}
         <div className="sticky top-16 sm:top-20 z-30 bg-[#FFFDF8]/95 backdrop-blur-md py-3.5 mb-8 border-y border-[#8B5F3A]/10">
           <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
             <button
               onClick={() => setActiveTab('all')}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
                 activeTab === 'all'
-                  ? 'bg-[#20241F] text-white shadow-xs'
-                  : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-[#20241F]'
+                  ? 'bg-[#1C4E47] text-white shadow-xs'
+                  : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-[#1C4E47]'
               }`}
             >
               Todos os Itens
@@ -225,18 +225,18 @@ export function FeaturedProducts() {
               onClick={() => setActiveTab('caes')}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
                 activeTab === 'caes'
-                  ? 'bg-[#12c0e0] text-[#20241F] shadow-xs'
-                  : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-[#12c0e0]'
+                  ? 'bg-[#1C4E47] text-white shadow-xs'
+                  : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-[#1C4E47]'
               }`}
             >
-              Cães Adultos
+              Cães Adultos &amp; Filhotes
             </button>
             <button
               onClick={() => setActiveTab('gatos')}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
                 activeTab === 'gatos'
-                  ? 'bg-[#12c0e0] text-[#20241F] shadow-xs'
-                  : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-[#12c0e0]'
+                  ? 'bg-[#1C4E47] text-white shadow-xs'
+                  : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-[#1C4E47]'
               }`}
             >
               Gatos Castrados
@@ -245,8 +245,8 @@ export function FeaturedProducts() {
               onClick={() => setActiveTab('farmacia')}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
                 activeTab === 'farmacia'
-                  ? 'bg-emerald-600 text-white shadow-xs'
-                  : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-emerald-600'
+                  ? 'bg-[#1C4E47] text-white shadow-xs'
+                  : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-[#1C4E47]'
               }`}
             >
               Farmácia Veterinária
@@ -255,8 +255,8 @@ export function FeaturedProducts() {
               onClick={() => setActiveTab('agro')}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
                 activeTab === 'agro'
-                  ? 'bg-[#3591A1] text-white shadow-xs'
-                  : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-[#3591A1]'
+                  ? 'bg-[#1C4E47] text-white shadow-xs'
+                  : 'bg-white text-[#20241F] border border-[#8B5F3A]/20 hover:border-[#1C4E47]'
               }`}
             >
               Campo &amp; Equinos

@@ -1,4 +1,4 @@
-﻿import Image from 'next/image';
+import Image from 'next/image';
 import {
   ShieldCheck,
   Bug,
@@ -12,18 +12,18 @@ import {
 
 export function PharmacySection() {
   return (
-    <section className="w-full py-16 sm:py-20 bg-[#FFFDF8]" id="farmacia">
+    <section className="w-full py-16 sm:py-24 bg-[#FFFDF8]" id="farmacia">
       <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-[#20241F] rounded-[36px] p-6 sm:p-10 lg:p-14 text-white relative overflow-hidden shadow-2xl border border-[#8B5F3A]/20">
+        <div className="bg-[#1C4E47] rounded-[36px] p-6 sm:p-10 lg:p-14 text-white relative overflow-hidden shadow-xl border border-[#D8E934]/20">
           {/* Ambient decorative subtle glow */}
-          <div className="absolute -right-16 -bottom-16 w-96 h-96 bg-[#12c0e0]/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -right-16 -bottom-16 w-96 h-96 bg-[#D8E934]/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
             {/* Left Content */}
             <div className="lg:col-span-6 flex flex-col items-start">
               <div className="inline-flex items-center gap-2 bg-white/10 px-3.5 py-1.5 rounded-full mb-4 border border-white/10">
-                <ShieldCheck className="w-4 h-4 text-[#12c0e0]" />
-                <span className="text-xs text-[#12c0e0] font-semibold">
+                <ShieldCheck className="w-4 h-4 text-[#D8E934]" />
+                <span className="text-xs text-[#D8E934] font-semibold">
                   Farmácia &amp; Cuidados Veterinários
                 </span>
               </div>

@@ -1,4 +1,4 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
@@ -22,6 +22,10 @@
   --color-brand-dark: #20241F;
   --color-obsidian-dark: #20241F;
 
+  --color-verde-prestige: #1C4E47;
+  --color-lime-vibe: #D8E934;
+  --color-stone-warm: #FAF7F2;
+
   --font-sans: var(--font-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-serif: var(--font-serif), Georgia, Cambria, 'Times New Roman', serif;
   
@@ -31,6 +35,8 @@
   --radius-xl: calc(var(--radius) * 1.4);
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
+
+  --ease-editorial: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 :root {
@@ -80,6 +86,26 @@
 /* Scroll suave e seleção personalizada */
 html {
   scroll-behavior: smooth;
+}
+
+/* Regras Tipográficas de Alto Padrão (/redesign-existing-projects) */
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+  letter-spacing: -0.02em;
+}
+
+p, li, blockquote {
+  text-wrap: pretty;
+}
+
+/* Micro-interação ágil e feedback de foco acessível */
+button, a {
+  transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+:focus-visible {
+  outline: 2px solid #12c0e0;
+  outline-offset: 2px;
 }
 
 ::selection {

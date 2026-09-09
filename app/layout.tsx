@@ -1,5 +1,5 @@
-﻿import type { Metadata } from 'next';
-import { Inter, Fraunces } from 'next/font/google';
+import type { Metadata } from 'next';
+import { Manrope, Fraunces } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
 import { Header } from '@/components/layout/header';
@@ -7,16 +7,18 @@ import { CookieBanner } from '@/components/layout/cookie-banner';
 import { FloatingWhatsApp } from '@/components/layout/floating-whatsapp';
 import { BottomNav } from '@/components/layout/bottom-nav';
 
-const inter = Inter({
+const manrope = Manrope({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
+  weight: ['400', '500', '600', '700', '800'],
 });
 
 const fraunces = Fraunces({
   subsets: ['latin'],
   variable: '--font-serif',
   display: 'swap',
+  weight: ['600', '700'],
 });
 
 export const metadata: Metadata = {
@@ -58,7 +60,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className={`${inter.variable} ${fraunces.variable} scroll-smooth`}>
+    <html lang="pt-BR" className={`${manrope.variable} ${fraunces.variable} scroll-smooth`}>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>

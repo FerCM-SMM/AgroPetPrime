@@ -60,18 +60,18 @@ export default function PerfilPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#faf8f5]">
+    <div className="min-h-screen bg-[#FFFDF8] text-[#20241F]">
       {/* Header Profile Title */}
-      <div className="bg-white border-b border-[#ede8dc] py-8">
+      <div className="bg-[#FAF7F2] border-b border-[#EBE3D5] py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-[#12c0e0]/20 text-[#0284c7] flex items-center justify-center font-black text-2xl border-2 border-white shadow-xs">
+              <div className="w-16 h-16 rounded-2xl bg-[#E2EBE8] text-[#1C4E47] flex items-center justify-center font-black text-2xl border border-[#C5D8D3] shadow-xs">
                 {user?.email ? user.email.slice(0, 2).toUpperCase() : 'AG'}
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-2xl font-black text-[#111827]">
+                  <h1 className="font-serif text-2xl font-bold text-[#20241F]">
                     {user?.email ? user.email.split('@')[0] : 'Fernando Costa'}
                   </h1>
                   <span className="bg-[#12c0e0] text-black text-[10px] font-extrabold px-2.5 py-0.5 rounded-full">
@@ -115,14 +115,14 @@ export default function PerfilPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Sidebar Menu Tabs */}
           <div className="lg:col-span-4 space-y-2">
-            <div className="bg-white rounded-3xl p-3 border border-[#ede8dc] shadow-xs space-y-1">
+            <div className="bg-[#FAF7F2] rounded-3xl p-3 border border-[#EBE3D5] shadow-xs space-y-1">
               <button
                 type="button"
                 onClick={() => setActiveTab('pedidos')}
                 className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl text-sm font-bold transition-all ${
                   activeTab === 'pedidos'
-                    ? 'bg-[#12c0e0] text-black shadow-xs'
-                    : 'text-gray-700 hover:bg-[#faf8f5]'
+                    ? 'bg-[#1C4E47] text-white shadow-xs'
+                    : 'text-[#555C54] hover:bg-[#FFFDF8]'
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -137,8 +137,8 @@ export default function PerfilPage() {
                 onClick={() => setActiveTab('dados')}
                 className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl text-sm font-bold transition-all ${
                   activeTab === 'dados'
-                    ? 'bg-[#12c0e0] text-black shadow-xs'
-                    : 'text-gray-700 hover:bg-[#faf8f5]'
+                    ? 'bg-[#1C4E47] text-white shadow-xs'
+                    : 'text-[#555C54] hover:bg-[#FFFDF8]'
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -153,8 +153,8 @@ export default function PerfilPage() {
                 onClick={() => setActiveTab('enderecos')}
                 className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl text-sm font-bold transition-all ${
                   activeTab === 'enderecos'
-                    ? 'bg-[#12c0e0] text-black shadow-xs'
-                    : 'text-gray-700 hover:bg-[#faf8f5]'
+                    ? 'bg-[#1C4E47] text-white shadow-xs'
+                    : 'text-[#555C54] hover:bg-[#FFFDF8]'
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -171,7 +171,7 @@ export default function PerfilPage() {
             {activeTab === 'pedidos' && (
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-extrabold text-[#111827]">
+                  <h2 className="font-serif text-xl font-bold text-[#20241F]">
                     Histórico de Pedidos
                   </h2>
                   <span className="text-xs text-gray-500 font-medium">
@@ -183,13 +183,13 @@ export default function PerfilPage() {
                   {mockOrders.map((order) => (
                     <div
                       key={order.id}
-                      className="bg-white rounded-3xl p-6 border border-[#ede8dc] shadow-xs hover-lift transition-all space-y-4"
+                      className="bg-[#FAF7F2] rounded-3xl p-6 border border-[#EBE3D5] shadow-xs hover:border-[#1C4E47]/30 transition-all space-y-4"
                     >
-                      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#f4f0e8] pb-4">
+                      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#EBE3D5] pb-4">
                         <div>
-                          <span className="text-xs font-bold text-gray-400">PEDIDO</span>
-                          <p className="text-base font-black text-[#111827]">#{order.id}</p>
-                          <span className="text-xs text-gray-500">Realizado em {order.date}</span>
+                          <span className="text-xs font-bold text-[#555C54]">PEDIDO</span>
+                          <p className="text-base font-black text-[#20241F]">#{order.id}</p>
+                          <span className="text-xs text-[#555C54]">Realizado em {order.date}</span>
                         </div>
 
                         <div className="flex items-center gap-2">
@@ -204,7 +204,7 @@ export default function PerfilPage() {
                       <div className="space-y-3">
                         {order.items.map((item, idx) => (
                           <div key={idx} className="flex items-center gap-3">
-                            <div className="relative w-14 h-14 bg-[#faf8f5] rounded-xl overflow-hidden shrink-0 border border-[#ede8dc]">
+                            <div className="relative w-14 h-14 bg-white rounded-xl overflow-hidden shrink-0 border border-[#EBE3D5]">
                               <Image
                                 src={item.image}
                                 alt={item.name}
@@ -213,10 +213,10 @@ export default function PerfilPage() {
                               />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-bold text-gray-900 truncate">
+                              <p className="text-sm font-bold text-[#20241F] truncate">
                                 {item.name}
                               </p>
-                              <p className="text-xs text-gray-500">
+                              <p className="text-xs text-[#555C54]">
                                 {item.qty}x R$ {item.price.toFixed(2).replace('.', ',')}
                               </p>
                             </div>
@@ -225,10 +225,10 @@ export default function PerfilPage() {
                       </div>
 
                       {/* Total & Action */}
-                      <div className="flex items-center justify-between pt-2 border-t border-[#f4f0e8]">
+                      <div className="flex items-center justify-between pt-2 border-t border-[#EBE3D5]">
                         <div>
-                          <span className="text-xs text-gray-500">Valor Total</span>
-                          <p className="text-lg font-extrabold text-[#111827]">
+                          <span className="text-xs text-[#555C54]">Valor Total</span>
+                          <p className="text-lg font-extrabold text-[#1C4E47]">
                             R$ {order.total.toFixed(2).replace('.', ',')}
                           </p>
                         </div>
@@ -236,7 +236,7 @@ export default function PerfilPage() {
                           href={`https://wa.me/5515996580804?text=Ol%C3%A1!%20Gostaria%20de%20consultar%20o%20status%20do%20meu%20pedido%20%23${order.id}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="bg-[#faf8f5] hover:bg-[#12c0e0] text-gray-800 hover:text-black font-bold text-xs px-4 py-2 rounded-full border border-[#ede8dc] transition-colors"
+                          className="bg-white hover:bg-[#12C0E0] text-[#20241F] hover:text-black font-bold text-xs px-4 py-2 rounded-full border border-[#D6CBB8] transition-colors"
                         >
                           Acompanhar Entrega
                         </a>
@@ -248,53 +248,53 @@ export default function PerfilPage() {
             )}
 
             {activeTab === 'dados' && (
-              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#ede8dc] shadow-xs space-y-6">
-                <h2 className="text-xl font-extrabold text-[#111827]">
+              <div className="bg-[#FAF7F2] rounded-3xl p-6 sm:p-8 border border-[#EBE3D5] shadow-xs space-y-6">
+                <h2 className="font-serif text-xl font-bold text-[#20241F]">
                   Dados Pessoais
                 </h2>
                 <form onSubmit={handleSaveProfile} className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">
+                      <label className="block text-xs font-bold text-[#20241F] mb-1">
                         Nome Completo
                       </label>
                       <input
                         type="text"
                         defaultValue="Fernando Costa"
-                        className="w-full bg-[#faf8f5] px-4 py-2.5 rounded-full border border-[#ede8dc] text-sm text-[#111827] focus:outline-none focus:ring-2 focus:ring-[#12c0e0]"
+                        className="w-full bg-white px-4 py-2.5 rounded-xl border border-[#D6CBB8] text-sm text-[#20241F] focus:outline-none focus:ring-2 focus:ring-[#12c0e0]"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">
+                      <label className="block text-xs font-bold text-[#20241F] mb-1">
                         E-mail
                       </label>
                       <input
                         type="email"
                         defaultValue={user?.email || 'fernando.costam90@outlook.com'}
-                        className="w-full bg-[#faf8f5] px-4 py-2.5 rounded-full border border-[#ede8dc] text-sm text-[#111827] focus:outline-none focus:ring-2 focus:ring-[#12c0e0]"
+                        className="w-full bg-white px-4 py-2.5 rounded-xl border border-[#D6CBB8] text-sm text-[#20241F] focus:outline-none focus:ring-2 focus:ring-[#12c0e0]"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">
+                      <label className="block text-xs font-bold text-[#20241F] mb-1">
                         WhatsApp / Celular
                       </label>
                       <input
                         type="tel"
                         defaultValue="(15) 99658-0804"
-                        className="w-full bg-[#faf8f5] px-4 py-2.5 rounded-full border border-[#ede8dc] text-sm text-[#111827] focus:outline-none focus:ring-2 focus:ring-[#12c0e0]"
+                        className="w-full bg-white px-4 py-2.5 rounded-xl border border-[#D6CBB8] text-sm text-[#20241F] focus:outline-none focus:ring-2 focus:ring-[#12c0e0]"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">
+                      <label className="block text-xs font-bold text-[#20241F] mb-1">
                         CPF
                       </label>
                       <input
                         type="text"
                         defaultValue="***.***.***-00"
-                        className="w-full bg-[#faf8f5] px-4 py-2.5 rounded-full border border-[#ede8dc] text-sm text-[#111827] focus:outline-none focus:ring-2 focus:ring-[#12c0e0]"
+                        className="w-full bg-white px-4 py-2.5 rounded-xl border border-[#D6CBB8] text-sm text-[#20241F] focus:outline-none focus:ring-2 focus:ring-[#12c0e0]"
                       />
                     </div>
                   </div>
@@ -312,9 +312,9 @@ export default function PerfilPage() {
             )}
 
             {activeTab === 'enderecos' && (
-              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#ede8dc] shadow-xs space-y-6">
+              <div className="bg-[#FAF7F2] rounded-3xl p-6 sm:p-8 border border-[#EBE3D5] shadow-xs space-y-6">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-extrabold text-[#111827]">
+                  <h2 className="font-serif text-xl font-bold text-[#20241F]">
                     Endereços Cadastrados
                   </h2>
                   <Button
@@ -325,18 +325,18 @@ export default function PerfilPage() {
                   </Button>
                 </div>
 
-                <div className="border border-[#ede8dc] rounded-2xl p-5 bg-[#faf8f5] relative">
+                <div className="border border-[#EBE3D5] rounded-2xl p-5 bg-white relative">
                   <span className="absolute top-4 right-4 bg-[#10b981]/15 text-[#059669] text-[10px] font-extrabold px-2.5 py-0.5 rounded-full">
                     PRINCIPAL
                   </span>
-                  <p className="font-bold text-[#111827]">Endereço Residencial</p>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="font-bold text-[#20241F]">Endereço Residencial</p>
+                  <p className="text-sm text-[#555C54] mt-1">
                     Av. Principal, 1500 - Bairro Centro
                   </p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-[#555C54]">
                     Sorocaba / SP - CEP: 18000-000
                   </p>
-                  <p className="text-xs text-gray-500 mt-2">
+                  <p className="text-xs text-[#555C54] mt-2">
                     Destinatário: Fernando Costa • (15) 99658-0804
                   </p>
                 </div>

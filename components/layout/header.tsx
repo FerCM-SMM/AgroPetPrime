@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -230,18 +230,34 @@ export function Header() {
             </div>
           </Link>
 
-          {/* Menu Mobile Hamburger */}
+          {/* Menu Mobile Hamburger com transformação animada de linhas em X */}
           <button
+            type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-gray-700 hover:text-black rounded-xl hover:bg-gray-100"
+            aria-label={mobileMenuOpen ? 'Fechar menu' : 'Abrir menu'}
+            className="md:hidden relative w-10 h-10 flex flex-col items-center justify-center rounded-xl bg-white border border-[#8B5F3A]/20 text-[#20241F] hover:bg-gray-50 transition-all"
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            <span
+              className={`w-5 h-0.5 bg-[#20241F] rounded-full transition-all duration-300 ${
+                mobileMenuOpen ? 'rotate-45 translate-y-1.5' : 'mb-1'
+              }`}
+            />
+            <span
+              className={`w-5 h-0.5 bg-[#20241F] rounded-full transition-all duration-300 ${
+                mobileMenuOpen ? 'opacity-0' : 'mb-1'
+              }`}
+            />
+            <span
+              className={`w-5 h-0.5 bg-[#20241F] rounded-full transition-all duration-300 ${
+                mobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''
+              }`}
+            />
           </button>
         </div>
       </div>
 
       {/* 3. SELETOR DAS DUAS JORNADAS DO PÚBLICO (Tutor de Pet vs Produtor Rural / Campo) */}
-      <div className="bg-[#f7f4ec] border-t border-[#8B5F3A]/10 px-4 py-2">
+      <div className="bg-[#FAF7F2] border-t border-[#8B5F3A]/10 px-4 py-2">
         <div className="max-w-[1360px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
           <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
             <span className="text-[11px] font-bold text-gray-500 shrink-0 hidden md:inline">
@@ -251,8 +267,8 @@ export function Header() {
               onClick={() => handleSelectJourney('pet')}
               className={`px-3 py-1.5 rounded-full font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
                 activeJourney === 'pet'
-                  ? 'bg-[#12c0e0] text-[#20241F] shadow-xs'
-                  : 'bg-white text-gray-700 border border-[#8B5F3A]/15 hover:border-[#12c0e0]'
+                  ? 'bg-[#1C4E47] text-white shadow-xs'
+                  : 'bg-white text-gray-700 border border-[#8B5F3A]/15 hover:border-[#1C4E47]'
               }`}
             >
               <span>🐾 Sou tutor de pet (Cães &amp; Gatos)</span>
@@ -261,8 +277,8 @@ export function Header() {
               onClick={() => handleSelectJourney('agro')}
               className={`px-3 py-1.5 rounded-full font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
                 activeJourney === 'agro'
-                  ? 'bg-[#3591A1] text-white shadow-xs'
-                  : 'bg-white text-gray-700 border border-[#8B5F3A]/15 hover:border-[#3591A1]'
+                  ? 'bg-[#1C4E47] text-white shadow-xs'
+                  : 'bg-white text-gray-700 border border-[#8B5F3A]/15 hover:border-[#1C4E47]'
               }`}
             >
               <span>🌾 Trabalho com campo/agro (Cavalos &amp; Haras)</span>
@@ -283,7 +299,7 @@ export function Header() {
               <Link
                 key={idx}
                 href={dept.href}
-                className="hover:text-[#00829B] transition-colors whitespace-nowrap"
+                className="hover:text-[#1C4E47] transition-colors whitespace-nowrap"
               >
                 {dept.label}
               </Link>
@@ -292,29 +308,45 @@ export function Header() {
         </div>
       </div>
 
-      {/* Menu Mobile Drawer */}
+      {/* Menu Mobile Drawer Acolhedor com Backdrop Blur */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-100 p-4 space-y-3">
+        <div className="md:hidden bg-[#FFFDF8]/98 backdrop-blur-2xl border-t border-[#8B5F3A]/15 p-5 space-y-4 shadow-xl animate-[fadeSlideUp_0.3s_ease-out_forwards]">
           <form onSubmit={handleSearch} className="relative">
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar produtos..."
-              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs"
+              placeholder="Buscar rações, medicamentos, antipulgas..."
+              className="w-full px-4 py-3 bg-white border border-[#8B5F3A]/20 rounded-2xl text-xs text-[#20241F] placeholder:text-gray-400 focus:outline-hidden focus:border-[#12c0e0]"
             />
           </form>
           <div className="space-y-1">
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-3 block mb-1">
+              Departamentos
+            </span>
             {navDepartments.map((dept, idx) => (
               <Link
                 key={idx}
                 href={dept.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-2 px-3 rounded-lg text-xs font-bold text-[#20241F] hover:bg-gray-50"
+                className="flex items-center justify-between py-2.5 px-3 rounded-xl text-xs font-bold text-[#20241F] hover:bg-[#1C4E47]/5 hover:text-[#1C4E47] transition-all"
               >
-                {dept.label}
+                <span>{dept.label}</span>
+                <span className="text-gray-400">→</span>
               </Link>
             ))}
+          </div>
+
+          <div className="pt-3 border-t border-[#8B5F3A]/10 flex flex-col gap-2">
+            <a
+              href="https://wa.me/5515996580804"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 bg-[#25D366] text-white py-3 rounded-xl text-xs font-bold shadow-xs hover:bg-[#20b858] transition-all"
+            >
+              <MessageCircle className="w-4 h-4 fill-white" />
+              <span>Falar com Atendente no WhatsApp</span>
+            </a>
           </div>
         </div>
       )}
