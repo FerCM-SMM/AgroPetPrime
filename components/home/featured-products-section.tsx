@@ -1,30 +1,57 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import {
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  MessageCircle,
+  ShoppingCart,
+  Star,
+} from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ShoppingCart, Star, MessageCircle, ArrowRight, Check } from 'lucide-react';
-import { useCart } from '@/hooks/use-cart';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import { MouseTilt } from '@/components/motion/mouse-tilt';
+import { SplitText } from '@/components/motion/split-text';
+import { useCart } from '@/hooks/use-cart';
 
 interface FeaturedProductsSectionProps {
   activeAudience?: 'pet' | 'agro';
 }
 
+interface ProductItem {
+  id: string;
+  name: string;
+  category: string;
+  badge: string;
+  badgeColor: string;
+  price: number;
+  comparePrice: number;
+  discount: string;
+  reviews: number;
+  rating: number;
+  image: string;
+  variations: string[];
+  description: string;
+}
+
 export function FeaturedProductsSection({ activeAudience = 'pet' }: FeaturedProductsSectionProps) {
   const { addItem } = useCart();
   const [activeTab, setActiveTab] = useState<string>('todos');
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
   // Sincroniza tab com o toggle da Hero
   useEffect(() => {
     if (activeAudience === 'agro') {
       setActiveTab('agro');
-    } else {
-      if (activeTab === 'agro') {
-        setActiveTab('todos');
-      }
+    } else if (activeTab === 'agro') {
+      setActiveTab('todos');
     }
-  }, [activeAudience]);
+  }, [activeAudience, activeTab]);
 
   const tabs = [
     { id: 'todos', label: 'Todos os Itens' },
@@ -128,11 +155,43 @@ export function FeaturedProductsSection({ activeAudience = 'pet' }: FeaturedProd
   ];
 
   const filteredProducts =
-    activeTab === 'todos'
-      ? products
-      : products.filter((p) => p.category === activeTab);
+    activeTab === 'todos' ? products : products.filter((p) => p.category === activeTab);
 
-  const handleAddToCart = (product: any) => {
+  // Mouse Drag Physics for Horizontal Carousel (Voldog carousel.js)
+  const handleMouseDown = (e: React.MouseEvent) => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+    setIsDragging(true);
+    setStartX(e.pageX - carousel.offsetLeft);
+    setScrollLeft(carousel.scrollLeft);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+    const x = e.pageX - carousel.offsetLeft;
+    const walk = (x - startX) * 1.5; // Drag sensitivity multiplier
+    carousel.scrollLeft = scrollLeft - walk;
+  };
+
+  const scrollCarousel = (direction: 'left' | 'right') => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+    const amount = direction === 'left' ? -380 : 380;
+    carousel.scrollBy({ left: amount, behavior: 'smooth' });
+  };
+
+  const handleAddToCart = (product: ProductItem) => {
     addItem({
       id: product.id,
       name: product.name,
@@ -156,26 +215,59 @@ export function FeaturedProductsSection({ activeAudience = 'pet' }: FeaturedProd
   };
 
   return (
-    <section id="produtos" className="py-20 bg-[#FAF7F2] text-black">
-      <div className="max-w-[1360px] mx-auto px-4 sm:px-6">
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-10">
-          <span className="inline-block text-xs font-black uppercase tracking-widest text-[#20BEE2] bg-black text-white px-4 py-1.5 rounded-full mb-3">
-            Seleção Especial
-          </span>
-          <h2 className="font-['Archivo_Black',sans-serif] text-3xl sm:text-4xl md:text-5xl font-black tracking-tight uppercase text-black">
-            Destaques para seu Pet &amp; Campo
-          </h2>
-          <p className="text-sm sm:text-base text-gray-600 mt-3 font-normal">
-            Itens originais de alta nutrição e saúde, com entrega expressa para toda a região de Sorocaba.
-          </p>
+    <section id="produtos" className="py-20 bg-[#FAF7F2] text-black overflow-hidden relative">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
+        {/* Header com SplitText */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+          <div>
+            <span className="inline-block text-xs font-black uppercase tracking-widest text-[#20BEE2] bg-black px-4 py-1.5 rounded-full mb-3 shadow-sm">
+              Seleção Especial
+            </span>
+            <div>
+              <SplitText
+                text="Destaques para seu Pet & Campo"
+                as="h2"
+                className="font-['Archivo_Black',sans-serif] text-3xl sm:text-4xl md:text-5xl font-black tracking-tight uppercase text-black"
+                highlightWord="Campo"
+                highlightClassName="text-[#20BEE2]"
+              />
+            </div>
+            <p className="text-sm sm:text-base text-gray-600 mt-2 font-normal max-w-xl">
+              Itens originais de alta nutrição e saúde, com entrega expressa para toda a região de
+              Sorocaba.
+            </p>
+          </div>
+
+          {/* Botões de Navegação do Carrossel (Estilo Voldog Carousel) */}
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              data-cursor="pointer"
+              onClick={() => scrollCarousel('left')}
+              aria-label="Rolar carrossel para a esquerda"
+              className="w-12 h-12 rounded-full border border-neutral-300 bg-white hover:bg-black hover:text-white flex items-center justify-center transition-all shadow-sm active:scale-95 cursor-pointer"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              type="button"
+              data-cursor="pointer"
+              onClick={() => scrollCarousel('right')}
+              aria-label="Rolar carrossel para a direita"
+              className="w-12 h-12 rounded-full border border-neutral-300 bg-white hover:bg-black hover:text-white flex items-center justify-center transition-all shadow-sm active:scale-95 cursor-pointer"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Tabs de Filtro */}
-        <div className="flex items-center justify-center gap-2 sm:gap-3 overflow-x-auto pb-4 mb-12 select-none">
+        <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto pb-4 mb-8 select-none no-scrollbar">
           {tabs.map((tab) => (
             <button
+              type="button"
               key={tab.id}
+              data-cursor="pointer"
               onClick={() => setActiveTab(tab.id)}
               className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-black whitespace-nowrap transition-all duration-200 cursor-pointer ${
                 activeTab === tab.id
@@ -188,105 +280,132 @@ export function FeaturedProductsSection({ activeAudience = 'pet' }: FeaturedProd
           ))}
         </div>
 
-        {/* Grid de Cards de Produto */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* CARROSSEL HORIZONTAL COM DRAG PHYSICS & CURSOR 'ARRASTE' */}
+        {/* biome-ignore lint/a11y/noStaticElementInteractions: horizontal drag carousel with mouse tracking */}
+        <div
+          ref={carouselRef}
+          data-cursor="drag"
+          onMouseDown={handleMouseDown}
+          onMouseLeave={handleMouseLeave}
+          onMouseUp={handleMouseUp}
+          onMouseMove={handleMouseMove}
+          className={`flex gap-6 overflow-x-auto pb-8 pt-2 scroll-smooth select-none cursor-grab active:cursor-grabbing no-scrollbar ${
+            isDragging ? 'cursor-grabbing' : ''
+          }`}
+          style={{
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+          }}
+        >
           {filteredProducts.map((prod) => (
-            <div
-              key={prod.id}
-              className="group bg-white rounded-3xl p-6 border border-neutral-200 hover:border-[#20BEE2] shadow-sm hover:shadow-2xl transition-all duration-300 flex flex-col justify-between"
-            >
-              <div>
-                {/* Imagem com Badge e Efeito Zoom no Hover */}
-                <div className="relative w-full h-64 rounded-2xl overflow-hidden bg-neutral-100 mb-5">
-                  <Image
-                    src={prod.image}
-                    alt={prod.name}
-                    fill
-                    className="object-cover group-hover:scale-108 transition-transform duration-500 ease-out"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  />
-                  {prod.badge && (
-                    <span
-                      className={`absolute top-3 left-3 text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-md ${prod.badgeColor}`}
-                    >
-                      {prod.badge}
-                    </span>
-                  )}
-                  <span className="absolute top-3 right-3 bg-black/80 text-white text-[10px] font-black px-2.5 py-1 rounded-full backdrop-blur-xs">
-                    {prod.discount}
-                  </span>
-                </div>
+            <div key={prod.id} className="w-[290px] sm:w-[340px] md:w-[380px] shrink-0">
+              <MouseTilt maxTilt={5} scale={1.01} className="h-full">
+                <div className="group h-full bg-white rounded-3xl p-6 border border-neutral-200 hover:border-[#20BEE2] shadow-sm hover:shadow-2xl transition-all duration-300 flex flex-col justify-between">
+                  <div>
+                    {/* Imagem com Badge e Efeito Zoom */}
+                    <div className="relative w-full h-64 rounded-2xl overflow-hidden bg-neutral-100 mb-5">
+                      <Image
+                        src={prod.image}
+                        alt={prod.name}
+                        fill
+                        draggable={false}
+                        className="object-cover group-hover:scale-108 transition-transform duration-500 ease-out pointer-events-none"
+                        sizes="380px"
+                      />
+                      {prod.badge && (
+                        <span
+                          className={`absolute top-3 left-3 text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-md ${prod.badgeColor}`}
+                        >
+                          {prod.badge}
+                        </span>
+                      )}
+                      <span className="absolute top-3 right-3 bg-black/80 text-white text-[10px] font-black px-2.5 py-1 rounded-full backdrop-blur-xs">
+                        {prod.discount}
+                      </span>
+                    </div>
 
-                {/* Avaliação */}
-                <div className="flex items-center gap-1.5 mb-2">
-                  <div className="flex text-amber-400">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
-                    ))}
+                    {/* Avaliação */}
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <div className="flex text-amber-400">
+                        {[1, 2, 3, 4, 5].map((starNum) => (
+                          <Star
+                            key={`${prod.id}-star-${starNum}`}
+                            className="w-3.5 h-3.5 fill-amber-400"
+                          />
+                        ))}
+                      </div>
+                      <span className="text-xs font-bold text-gray-500">
+                        {prod.rating} ({prod.reviews} avaliações)
+                      </span>
+                    </div>
+
+                    {/* Nome do Produto */}
+                    <h3 className="font-bold text-base text-black leading-snug line-clamp-2 mb-3 group-hover:text-[#20BEE2] transition-colors">
+                      {prod.name}
+                    </h3>
+
+                    {/* Variações */}
+                    <div className="flex flex-wrap gap-1.5 mb-4">
+                      {prod.variations.map((v) => (
+                        <span
+                          key={`${prod.id}-${v}`}
+                          className="text-[10px] font-bold text-gray-600 bg-neutral-100 border border-neutral-200 px-2 py-0.5 rounded-md"
+                        >
+                          {v}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                  <span className="text-xs font-bold text-gray-500">
-                    {prod.rating} ({prod.reviews} avaliações)
-                  </span>
+
+                  {/* Preços e Ação de Compra */}
+                  <div className="pt-4 border-t border-neutral-100">
+                    <div className="flex items-baseline gap-2 mb-4">
+                      <span className="text-xs text-gray-400 line-through">
+                        R$ {prod.comparePrice.toFixed(2).replace('.', ',')}
+                      </span>
+                      <span className="font-['Archivo_Black',sans-serif] text-2xl font-black text-black">
+                        R$ {prod.price.toFixed(2).replace('.', ',')}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        data-cursor="pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToCart(prod);
+                        }}
+                        className="w-full bg-black hover:bg-neutral-800 text-white text-xs font-black py-3 rounded-full flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer shadow-sm"
+                      >
+                        <ShoppingCart className="w-3.5 h-3.5 text-[#20BEE2]" />
+                        <span>Adicionar</span>
+                      </button>
+
+                      <a
+                        href={`https://wa.me/5515996580804?text=Ol%C3%A1!%20Gostaria%20de%20comprar%20o%20produto%20${encodeURIComponent(prod.name)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-cursor="pointer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="w-full bg-[#20BEE2] hover:bg-[#51FFE6] text-black text-xs font-black py-3 rounded-full flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-sm"
+                      >
+                        <MessageCircle className="w-3.5 h-3.5 fill-black" />
+                        <span>Pedir Zap</span>
+                      </a>
+                    </div>
+                  </div>
                 </div>
-
-                {/* Nome do Produto */}
-                <h3 className="font-bold text-base text-black leading-snug line-clamp-2 mb-3 group-hover:text-[#20BEE2] transition-colors">
-                  {prod.name}
-                </h3>
-
-                {/* Variações */}
-                <div className="flex flex-wrap gap-1.5 mb-4">
-                  {prod.variations.map((v, i) => (
-                    <span
-                      key={i}
-                      className="text-[10px] font-bold text-gray-600 bg-neutral-100 border border-neutral-200 px-2 py-0.5 rounded-md"
-                    >
-                      {v}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Preços e Ação de Compra */}
-              <div className="pt-4 border-t border-neutral-100">
-                <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-xs text-gray-400 line-through">
-                    R$ {prod.comparePrice.toFixed(2).replace('.', ',')}
-                  </span>
-                  <span className="font-['Archivo_Black',sans-serif] text-2xl font-black text-black">
-                    R$ {prod.price.toFixed(2).replace('.', ',')}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleAddToCart(prod)}
-                    className="w-full bg-black hover:bg-neutral-800 text-white text-xs font-black py-3 rounded-full flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer"
-                  >
-                    <ShoppingCart className="w-3.5 h-3.5 text-[#20BEE2]" />
-                    <span>Adicionar</span>
-                  </button>
-
-                  <a
-                    href={`https://wa.me/5515996580804?text=Ol%C3%A1!%20Gostaria%20de%20comprar%20o%20produto%20${encodeURIComponent(prod.name)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full bg-[#20BEE2] hover:bg-[#51FFE6] text-black text-xs font-black py-3 rounded-full flex items-center justify-center gap-1.5 transition-all active:scale-95"
-                  >
-                    <MessageCircle className="w-3.5 h-3.5 fill-black" />
-                    <span>Pedir Zap</span>
-                  </a>
-                </div>
-              </div>
+              </MouseTilt>
             </div>
           ))}
         </div>
 
         {/* Botão Final: Ver Catálogo Completo */}
-        <div className="mt-14 text-center">
+        <div className="mt-8 text-center">
           <Link
             href="/categorias/racoes"
+            data-cursor="pointer"
             className="inline-flex items-center gap-2 bg-black hover:bg-neutral-800 text-white font-black text-xs sm:text-sm px-8 py-4 rounded-full shadow-lg hover:scale-105 transition-all"
           >
             <span>Ver Todos os Itens do Catálogo</span>

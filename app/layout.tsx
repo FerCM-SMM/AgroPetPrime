@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
-import { Poppins, Archivo_Black } from 'next/font/google';
+import { Archivo_Black, Poppins } from 'next/font/google';
 import './globals.css';
-import { Providers } from './providers';
-import { Header } from '@/components/layout/header';
+import { BottomNav } from '@/components/layout/bottom-nav';
 import { CookieBanner } from '@/components/layout/cookie-banner';
 import { FloatingWhatsApp } from '@/components/layout/floating-whatsapp';
-import { BottomNav } from '@/components/layout/bottom-nav';
+import { Header } from '@/components/layout/header';
+import { CursorFollower } from '@/components/motion/cursor-follower';
+import { SmoothScrollProvider } from '@/components/motion/smooth-scroll-provider';
+import { Providers } from './providers';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -54,24 +56,23 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className={`${poppins.variable} ${archivoBlack.variable} scroll-smooth`}>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body className="min-h-screen font-sans bg-[#FFFFFF] text-[#000000] antialiased selection:bg-[#20BEE2]/30 selection:text-[#000000] pb-16 lg:pb-0">
-        <Providers>
-          <Header />
-          {children}
-          <FloatingWhatsApp />
-          <BottomNav />
-          <CookieBanner />
-        </Providers>
+        <SmoothScrollProvider>
+          <CursorFollower />
+          <Providers>
+            <Header />
+            {children}
+            <FloatingWhatsApp />
+            <BottomNav />
+            <CookieBanner />
+          </Providers>
+        </SmoothScrollProvider>
       </body>
     </html>
   );

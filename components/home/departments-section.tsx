@@ -1,7 +1,9 @@
 'use client';
 
-import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
+import Link from 'next/link';
+import { MouseTilt } from '@/components/motion/mouse-tilt';
+import { SplitText } from '@/components/motion/split-text';
 
 interface DepartmentsSectionProps {
   activeAudience?: 'pet' | 'agro';
@@ -80,80 +82,86 @@ export function DepartmentsSection({ activeAudience = 'pet' }: DepartmentsSectio
       <div className="max-w-[1360px] mx-auto px-4 sm:px-6">
         {/* Cabeçalho da Seção */}
         <div className="text-center max-w-3xl mx-auto mb-14">
-          <span className="inline-block text-xs font-black uppercase tracking-widest text-[#20BEE2] bg-[#20BEE2]/10 px-4 py-1.5 rounded-full mb-3">
+          <span className="inline-block text-xs font-black uppercase tracking-widest text-[#20BEE2] bg-[#20BEE2]/10 px-4 py-1.5 rounded-full mb-3 shadow-xs">
             Departamentos &amp; Espécies
           </span>
-          <h2 className="font-['Archivo_Black',sans-serif] text-3xl sm:text-4xl md:text-5xl font-black tracking-tight uppercase text-black">
-            Qual é a sua necessidade hoje?
-          </h2>
+          <div>
+            <SplitText
+              text="Qual é a sua necessidade hoje?"
+              as="h2"
+              className="font-['Archivo_Black',sans-serif] text-3xl sm:text-4xl md:text-5xl font-black tracking-tight uppercase text-black"
+              highlightWord="necessidade"
+              highlightClassName="text-[#20BEE2]"
+            />
+          </div>
           <p className="text-sm sm:text-base text-gray-600 mt-3 font-normal">
-            Selecione o departamento ideal para encontrar rações nobres, dosagens veterinárias seguras e suprimentos para campo ou residência.
+            Selecione o departamento ideal para encontrar rações nobres, dosagens veterinárias
+            seguras e suprimentos para campo ou residência.
           </p>
         </div>
 
-        {/* Grid de 6 Cards com Stagger Suave */}
+        {/* Grid de 6 Cards com MouseTilt e Cursor Pointer */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {sortedDepartments.map((dept, index) => {
+          {sortedDepartments.map((dept) => {
             const isHighlighted =
               (activeAudience === 'agro' && (dept.audience === 'agro' || dept.id === 'farmacia')) ||
               (activeAudience === 'pet' && (dept.id === 'caes' || dept.id === 'gatos'));
 
             return (
-              <Link
-                key={dept.id}
-                href={dept.href}
-                className={`group relative rounded-3xl p-7 border transition-all duration-300 flex flex-col justify-between overflow-hidden hover:shadow-xl hover:-translate-y-1 ${
-                  isHighlighted
-                    ? 'bg-neutral-950 text-white border-neutral-800 shadow-md'
-                    : 'bg-[#FAF7F2] text-black border-neutral-200 hover:border-[#20BEE2]'
-                }`}
-                style={{
-                  animationDelay: `${index * 90}ms`,
-                }}
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <span className="text-4xl sm:text-5xl group-hover:scale-110 transition-transform duration-300 block">
-                      {dept.emoji}
-                    </span>
-                    <div className="w-10 h-10 rounded-full bg-white/10 group-hover:bg-[#20BEE2] text-current group-hover:text-black flex items-center justify-center transition-colors">
-                      <ArrowUpRight className="w-5 h-5" />
+              <MouseTilt key={dept.id} maxTilt={6} scale={1.02} className="h-full">
+                <Link
+                  href={dept.href}
+                  data-cursor="pointer"
+                  className={`group relative rounded-3xl p-7 border transition-all duration-300 flex flex-col justify-between overflow-hidden hover:shadow-2xl h-full ${
+                    isHighlighted
+                      ? 'bg-neutral-950 text-white border-neutral-800 shadow-md'
+                      : 'bg-[#FAF7F2] text-black border-neutral-200 hover:border-[#20BEE2]'
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-6">
+                      <span className="text-4xl sm:text-5xl group-hover:scale-110 transition-transform duration-300 block">
+                        {dept.emoji}
+                      </span>
+                      <div className="w-10 h-10 rounded-full bg-white/10 group-hover:bg-[#20BEE2] text-current group-hover:text-black flex items-center justify-center transition-colors">
+                        <ArrowUpRight className="w-5 h-5" />
+                      </div>
                     </div>
-                  </div>
 
-                  {dept.badge && (
-                    <span
-                      className={`inline-block text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full mb-2 ${
-                        isHighlighted ? 'bg-[#20BEE2] text-black' : 'bg-[#000000] text-white'
+                    {dept.badge && (
+                      <span
+                        className={`inline-block text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full mb-2 ${
+                          isHighlighted ? 'bg-[#20BEE2] text-black' : 'bg-[#000000] text-white'
+                        }`}
+                      >
+                        {dept.badge}
+                      </span>
+                    )}
+
+                    <h3
+                      className={`font-['Archivo_Black',sans-serif] text-2xl font-black tracking-tight mb-2 ${
+                        isHighlighted ? 'text-white' : 'text-black'
                       }`}
                     >
-                      {dept.badge}
+                      {dept.name}
+                    </h3>
+                    <p
+                      className={`text-xs sm:text-sm font-medium leading-relaxed ${
+                        isHighlighted ? 'text-gray-300' : 'text-gray-600'
+                      }`}
+                    >
+                      {dept.description}
+                    </p>
+                  </div>
+
+                  <div className="mt-8 pt-4 border-t border-current/10 flex items-center justify-between text-xs font-bold">
+                    <span className={isHighlighted ? 'text-[#51FFE6]' : 'text-[#20BEE2]'}>
+                      Explorar Catálogo
                     </span>
-                  )}
-
-                  <h3
-                    className={`font-['Archivo_Black',sans-serif] text-2xl font-black tracking-tight mb-2 ${
-                      isHighlighted ? 'text-white' : 'text-black'
-                    }`}
-                  >
-                    {dept.name}
-                  </h3>
-                  <p
-                    className={`text-xs sm:text-sm font-medium leading-relaxed ${
-                      isHighlighted ? 'text-gray-300' : 'text-gray-600'
-                    }`}
-                  >
-                    {dept.description}
-                  </p>
-                </div>
-
-                <div className="mt-8 pt-4 border-t border-current/10 flex items-center justify-between text-xs font-bold">
-                  <span className={isHighlighted ? 'text-[#51FFE6]' : 'text-[#20BEE2]'}>
-                    Explorar Catálogo
-                  </span>
-                  <span className="opacity-60 group-hover:opacity-100 transition-opacity">→</span>
-                </div>
-              </Link>
+                    <span className="opacity-60 group-hover:opacity-100 transition-opacity">→</span>
+                  </div>
+                </Link>
+              </MouseTilt>
             );
           })}
         </div>
